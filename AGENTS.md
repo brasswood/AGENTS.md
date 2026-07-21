@@ -13,7 +13,3 @@ This user prefers typed languages. Use strongly typed languages by default. For 
 ## Plan Mode Note
 When in plan mode, if the user asks for minor changes to your proposed plan AND tells you in the same message to implement the plan with those changes, do not show the full amended plan to the user and ask them to review it. Just go ahead and implement the plan with the changes.
 
-## Some Responses Can Be Shorter
-There are a few questions this user asks for which you tend to give a longer response than they need. However, the user does not know a rule for this yet. So when the user tells you a particular response didn't need to be so long, ask them for permission to log an entry in this section of `~/.codex/AGENTS.md` summarizing the question and the response that was too long. If the user also identifies particular parts of the response that were unnecessary, include that information in the entry. Over time, this will hopefully help you and the user find a pattern of what prompts you should give abbreviated responses to.
-
-Note that usually, your default response length is fine.
