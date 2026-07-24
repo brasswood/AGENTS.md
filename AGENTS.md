@@ -41,7 +41,7 @@ add backwards compatibility and shape validation
 Add backwards compatibility and shape validation to the report renderer.
 ```
 
-About a paragraph of prose:
+A body with one or two concise explanatory paragraphs:
 
 ```text
 add context bars
@@ -79,24 +79,6 @@ Bring in stylo revision f319793c6989dba83994fbd10d560b21ad4a0c85.
 Using a submodule this time because stylo is actively developed, it's
 reasonably big, and it's reasonably separate from this project. I can
 make it not a submodule later if it gets annoying.
-```
-
-Two paragraphs of prose, for a change that needs more context:
-
-```text
-move common-pseudo-class bit into original bloom
-
-Move the common-pseudo-class bit into the original packed hashes that go
-in the bloom filter. The Servo developers repeatedly emphasize how
-important the size of the `AncestorHashes` and the bloom filter is.
-Also, I ran out of memory trying my new implementation on nightly, so
-that's further evidence that they are right.
-
-Computation of the bit for an element now happens in
-`style::bloom::each_relevant_element_hash`, and computation for a
-selector in `selectors::parser::collect_selector_hashes`. If the
-element/selector contains a common pseudo-class, the hash will be 1
-(since 0 is a sentinel value).
 ```
 
 An extensive body, for a change that needs substantial explanation:
