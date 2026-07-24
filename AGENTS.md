@@ -14,9 +14,10 @@ When you author a git commit message, follow the 50/72 rule:
 - After the subject, optionally add a blank line and a body wrapped at 72
   characters.
 
-If the subject line sufficiently explains the commit, use no explanatory
-body. If the subject line is not sufficient, put only enough in the body to
-explain the key change or changes. Explain the motivation only when it
+Use no explanatory body if the subject line sufficiently explains the commit,
+or if the change is small enough that the diff could be read and understood
+easily by itself. If the subject line is not sufficient, put only enough in the
+body to explain the key change or changes. Explain the motivation only when it
 would not be immediately obvious to a junior SWE.
 
 Every commit message authored by an agent must end with a blank line followed
