@@ -15,10 +15,10 @@ When you author a git commit message, follow the 50/72 rule:
   characters.
 
 Use no explanatory body if the subject line sufficiently explains the commit,
-or if the change is small enough that the diff could be read and understood
-easily by itself. If the subject line is not sufficient, put only enough in the
-body to explain the key change or changes. Explain the motivation only when it
-would not be immediately obvious to a junior SWE.
+or if the diff itself is easy enough to read and understand. If the subject
+line is not sufficient, put only enough in the body to explain the key change
+or changes. Explain the motivation only when it would not be immediately
+obvious to a junior SWE.
 
 Every commit message authored by an agent must end with a blank line followed
 by `Commit message authored by <AGENT>`, where `<AGENT>` is the coding agent's
