@@ -66,6 +66,21 @@ use new `Optimizations` struct for `do_website`
   Called by `do_website_with_configured_optimizations`.
 ```
 
+A body combining prose with a list of smaller changes:
+
+```text
+bring in stylo
+
+Bring in stylo revision f319793c6989dba83994fbd10d560b21ad4a0c85.
+- change selectors to path dependency in scraper and mach-6.
+- update cssparser to 0.36.0 in scraper and mach-6 to avoid dependency
+  conflict with stylo
+
+Using a submodule this time because stylo is actively developed, it's
+reasonably big, and it's reasonably separate from this project. I can
+make it not a submodule later if it gets annoying.
+```
+
 Two paragraphs of prose, for a change that needs more context:
 
 ```text
@@ -82,21 +97,6 @@ Computation of the bit for an element now happens in
 selector in `selectors::parser::collect_selector_hashes`. If the
 element/selector contains a common pseudo-class, the hash will be 1
 (since 0 is a sentinel value).
-```
-
-A body combining prose with a list of smaller changes:
-
-```text
-bring in stylo
-
-Bring in stylo revision f319793c6989dba83994fbd10d560b21ad4a0c85.
-- change selectors to path dependency in scraper and mach-6.
-- update cssparser to 0.36.0 in scraper and mach-6 to avoid dependency
-  conflict with stylo
-
-Using a submodule this time because stylo is actively developed, it's
-reasonably big, and it's reasonably separate from this project. I can
-make it not a submodule later if it gets annoying.
 ```
 
 An extensive body, for a change that needs substantial explanation:
