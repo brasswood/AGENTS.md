@@ -13,6 +13,3 @@ Before authoring or proposing any commit message, read and follow
 
 ## Use Typed Languages
 This user prefers typed languages. Use strongly typed languages by default. For example: Use Typescript instead of Javascript whenever possible. Use type hints in Python code. For these and other gradually typed languages, always use the strictest mode of type checking available.
-
-## Plan Mode Note
-When in plan mode, if the user asks for minor changes to your proposed plan AND tells you in the same message to implement the plan with those changes, do not show the full amended plan to the user and ask them to review it. Just go ahead and implement the plan with the changes.
