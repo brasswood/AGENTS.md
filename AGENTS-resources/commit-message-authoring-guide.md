@@ -6,6 +6,8 @@ When you author a git commit message, follow the 50/72 rule:
 - After the subject, optionally add a blank line and a body wrapped at 72
   characters.
 
+Capitalize the subject line. Write it in the imperative mood.
+
 Use no explanatory body if the subject line sufficiently explains the commit,
 or if the diff itself is easy enough to read and understand. If the subject
 line is not sufficient, put only enough in the body to explain the key change
@@ -22,14 +24,14 @@ be subject-line-only; in that case, the attribution is the only body text.
 Subject-line-only:
 
 ```text
-note red flag in stylist.rs
+Note red flag in stylist.rs
 ```
 
 A short body used because the complete explanation would exceed the subject
 line limit:
 
 ```text
-add backwards compatibility and shape validation
+Add backwards compatibility and shape validation
 
 Add backwards compatibility and shape validation to the report renderer.
 ```
@@ -37,7 +39,7 @@ Add backwards compatibility and shape validation to the report renderer.
 A body with one or two concise explanatory paragraphs:
 
 ```text
-add context bars
+Add context bars
 
 Add greyed out context bars to show percent of all websites each website
 takes. This allows the colored bars in the collapsed website view to
@@ -48,7 +50,7 @@ optimizations at a glance.
 A body listing smaller changes with bullets:
 
 ```text
-use new `Optimizations` struct for `do_website`
+Use new `Optimizations` struct for `do_website`
 
 - Create function `do_website_with_configured_optimizations` which takes
   as input struct `Optimizations`
@@ -62,7 +64,7 @@ use new `Optimizations` struct for `do_website`
 A body combining prose with a list of smaller changes:
 
 ```text
-bring in stylo
+Bring in stylo
 
 Bring in stylo revision f319793c6989dba83994fbd10d560b21ad4a0c85.
 - change selectors to path dependency in scraper and mach-6.
@@ -77,7 +79,7 @@ make it not a submodule later if it gets annoying.
 An extensive body, for a change that needs substantial explanation:
 
 ```text
-fix the reverse function
+Fix the reverse function
 
 Fix the reverse function, allowing tests to pass.
 
