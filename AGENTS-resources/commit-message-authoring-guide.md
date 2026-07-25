@@ -17,7 +17,7 @@ by `Commit message authored by <AGENT>`, where `<AGENT>` is the coding agent's
 name, such as `Codex` or `Claude`. Do this even when the commit would otherwise
 be subject-line-only; in that case, the attribution is the only body text.
 
-## Examples from this repository (append the required attribution to each one)
+## Examples (append the required attribution to each one)
 
 Subject-line-only:
 
