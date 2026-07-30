@@ -7,11 +7,11 @@ Therefore, edits to files **must** be expressed as a series of one or more commi
 
 For each commit, the two most important questions are:
 
-> Could a junior SWE familiar with the project understand what changed in under 5 minutes by reading the commit message and the diff?
+> Could a junior SWE familiar with the project understand what changed in under 2 minutes by reading the commit message and the diff?
 
 and
 
-> Could they review and independently verify the diff, possibly with help from the message, in under 5 minutes?
+> Could they review and independently verify the diff, possibly with help from the message, in under 2 minutes?
 
 The answer to both these questions must be "yes" as much as possible.
 
@@ -25,7 +25,9 @@ For example: Suppose you are changing a big aspect of a complex JSON schema, and
 
 Another example: Suppose a feature or sub-feature requires changes to several functions in a deep call graph. Instead of implementing the feature across all the functions in one commit, you could split it up into several commits. Each commit could implement the feature in one function, while still keeping that function compatible with the old behavior. Once the feature is completed in all of the functions, the compatibility could be removed in another commit if desired.
 
-Finally, some changes may be mechanically small, but conceptually big; for example, a simple yet clever algorithm like mean-of-means, or a small change to data layout that has subtle low-level implications. This is the one exception where a commit *may* take longer than 5 minutes for a junior SWE to understand and review. Lean heavily on the commit message and/or code comments to help in this scenario.
+Generally, prefer to keep each commit diff limited to 1-2 items (i.e., functions, modules, data types) plus strictly necessary collateral locations (e.g. call sites).
+
+Finally, some changes may be mechanically small, but conceptually big; for example, a simple yet clever algorithm like mean-of-means, or a small change to data layout that has subtle low-level implications. This is the one exception where a commit *may* take longer than 2 minutes for a junior SWE to understand and review. Lean heavily on the commit message and/or code comments to help in this scenario.
 
 ### Avoid Common Pitfalls When Crafting Commits
 The following are common pitfalls to avoid when crafting a commit:
