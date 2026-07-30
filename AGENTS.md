@@ -15,7 +15,7 @@ and
 
 The answer to both these questions must be "yes" as much as possible.
 
-Some changes are naturally this way: adding a parameter to one function, reordering operations, and adding a check are often examples of this.
+Some changes are naturally this way: adding a parameter to one function, reordering operations, or adding a check are often examples of this.
 
 Some changes produce an apparently large diff, but are in reality small: renaming a symbol, renaming a file, and moving a large section of code from one module into another without changing it are examples. Changes like these can be done in one commit, but must not be mixed with other changes in the same commit.
 
