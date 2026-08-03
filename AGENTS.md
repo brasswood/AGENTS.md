@@ -1,33 +1,15 @@
 # Guidelines
 
-## Shift Your Thinking From "Editing Files" to "Crafting Commits"
+## Organize Your Work Into Commits
 Commits are the atoms of change. A commit's diff and message explain one comprehensible thing that changed; a sequence of commits explains the project's evolution over time.
 
 Therefore, edits to files **must** be expressed as a series of one or more commits, unless instructed otherwise.
 
-For each commit, the two most important questions are:
+Each commit must express one coherent change. A reviewer should be able to understand and verify that change independently of the other commits.
 
-> Could a junior SWE familiar with the project understand what changed in under two minutes by reading the commit message and the diff?
+If a commit's additions or deletions exceed 40 lines, you must split it up into smaller, coherent, independently reviewable commits if at all possible. If this is difficult, it is often helpful to come up with commits that each lay one specific piece of groundwork for the overall change.
 
-and
-
-> Could they review and independently verify the diff, possibly with help from the message, in under two minutes?
-
-The answer to both these questions must be "yes" as much as possible.
-
-Some changes are naturally this way: adding a parameter to one function, reordering operations, or adding a check are often examples of this.
-
-Some changes produce an apparently large diff, but are in reality small: renaming a symbol, renaming a file, and moving a large section of code from one module into another without changing it are examples. Changes like these can be done in one commit, but must not be mixed with other changes in the same commit.
-
-Some changes are too large for one commit. In this case, you must split the change into smaller commits, each one following the rules above. If this is difficult, it is often helpful to come up with commits that each lay one specific piece of groundwork for the change.
-
-For example: Suppose you are changing a big aspect of a complex JSON schema, and it requires changing several data types in Serde structs. Instead of expressing this entire change as one commit with the message, "Update the JSON schema," split it up into multiple commits. Perhaps each commit changes only one data type, or a small set of related data types; or maybe it touches just enough of the schema to implement one specific sub-feature in the backend.
-
-Another example: Suppose a feature or sub-feature requires changes to several functions in a deep call graph. Instead of implementing the feature across all the functions in one commit, you could split it up into several commits. Each commit could implement the feature in one function, while still keeping that function compatible with the old behavior. Once the feature is completed in all of the functions, the compatibility could be removed in another commit if desired.
-
-Generally, prefer to keep each commit diff limited to 1-2 items (i.e., functions, modules, data types) plus strictly necessary collateral locations (e.g. call sites).
-
-Finally, some changes may be mechanically small, but conceptually big; for example, a simple yet clever algorithm like mean-of-means, or a small change to data layout that has subtle low-level implications. This is the one exception where a commit *may* take longer than two minutes for a junior SWE to understand and review. Lean heavily on the commit message and/or code comments to help in this scenario.
+The exception to the 40-line rule is changes that are mechanically large but conceptually small. Examples of this include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Changes like these can be done in one commit even if it exceeds 40 lines, but they must not be mixed with any other change in the same commit.
 
 ### Avoid Common Pitfalls When Crafting Commits
 The following are common pitfalls to avoid when crafting a commit:
