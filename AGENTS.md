@@ -28,6 +28,7 @@ When you author a git commit message, follow the 50/72 rule:
 Capitalize the subject line. Write it in the imperative mood.
 
 Commit messages must, at minimum, convey:
+
     - What the commit introduces/changes (e.g., "Use a stack-allocated buffer...")
     - Where the commit affects the code (e.g., "...in the CSS parser")
 
