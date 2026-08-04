@@ -3,7 +3,7 @@
 ## Organize Your Work Into Commits
 Commits are the atoms of change. A commit's diff and message explain one comprehensible thing that changed; a sequence of commits explains the project's evolution over time.
 
-Therefore, edits to files **must** be expressed as a series of one or more commits, unless instructed otherwise.
+Edits to files **must** be expressed as a series of one or more commits, unless instructed otherwise.
 
 Each commit must express one coherent change. A reviewer should be able to understand and verify that change independently of the other commits.
 
