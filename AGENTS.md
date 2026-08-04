@@ -29,8 +29,8 @@ Capitalize the subject line. Write it in the imperative mood.
 
 Commit messages must, at minimum, convey:
 
-    - What the commit introduces/changes (e.g., "Use a stack-allocated buffer...")
-    - Where the commit affects the code (e.g., "...in the CSS parser")
+- What the commit introduces/changes (e.g., "Use a stack-allocated buffer...")
+- Where the commit affects the code (e.g., "...in the CSS parser")
 
 Insufficient:
 
