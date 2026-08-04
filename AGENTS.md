@@ -16,7 +16,7 @@ The following are common pitfalls to avoid when crafting a commit:
 
 Do not move a section of code into a new module and implement a new feature in that section of code in the same commit. Instead, first move the intended code into the new module in one commit, then make the remaining changes in subsequent commits.
 
-Do not run the formatter on code you didn't touch in a commit; this introduces noise not related to the change. If you want to format just your changes, note on Rust that `cargo fmt` does not support formatting specific lines or files; you must instead use `rustfmt --file-lines`.
+Do not run the formatter on code you didn't touch in a commit. This introduces noise not related to the change. If you want to format just your changes, use `rustfmt --file-lines` if working with Rust code. Note that `cargo fmt` does not support formatting specific lines or files.
 
 ### Follow Commit Message Authoring Guidance
 When you author a git commit message, follow the 50/72 rule:
