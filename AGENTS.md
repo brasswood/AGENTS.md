@@ -27,6 +27,24 @@ When you author a git commit message, follow the 50/72 rule:
 
 Capitalize the subject line. Write it in the imperative mood.
 
+Every commit message you author must end with a blank line followed by `Commit message authored by <AGENT>`, where `<AGENT>` is your name, such as `Codex` or `Claude`:
+
+> <your message>
+>
+> Commit message authored by <AGENT>
+
+Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to format and validate your message. Example:
+
+```powershell
+python commit-message.py `
+  --subject "Add selector cache to matching" `
+  --body "Add a selector cache to matching. This speeds up..." `
+  --author Codex |
+  git commit -F -
+```
+
+This will validate the subject length, wrap the body, and append the signature.
+
 Commit messages must, at minimum, convey:
 
 - What the commit introduces/changes (e.g., "Use a stack-allocated buffer...")
@@ -82,12 +100,6 @@ Example:
 > By comparing strings, we can also now use a `HashMap` to do the reverse
 > lookup instead of linear searching a vector. This has caused a
 > noticeable speedup.
-
-Every commit message you author must end with a blank line followed by `Commit message authored by <AGENT>`, where `<AGENT>` is your name, such as `Codex` or `Claude`:
-
-> <your message>
->
-> Commit message authored by <AGENT>
 
 #### Mind PowerShell Newlines
 When using `git commit -m` from PowerShell, do not use `\n` to represent line breaks: this gets stored as the literal characters `\` and `n`. For a multiline message, use a PowerShell here-string (with actual newlines) or `` `n `` in an expandable string, or pass a message file through `git commit -F`.
