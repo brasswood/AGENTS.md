@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: CC0-1.0
 """Generate a commit message that follows the 50/72 formatting rule with sign-off."""
 
 from __future__ import annotations
