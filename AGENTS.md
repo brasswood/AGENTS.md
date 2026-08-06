@@ -102,7 +102,7 @@ Example:
 > noticeable speedup.
 
 #### Mind PowerShell Newlines
-When using `git commit -m` from PowerShell, do not use `\n` to represent line breaks: this gets stored as the literal characters `\` and `n`. For a multiline message, use a PowerShell here-string (with actual newlines) or `` `n `` in an expandable string, or pass a message file through `git commit -F`.
+In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
 
 ## Use Typed Languages
 This user prefers typed languages. Use strongly typed languages by default. For example: Use Typescript instead of Javascript whenever possible. Use type hints in Python code. For these and other gradually typed languages, always use the strictest mode of type checking available.
