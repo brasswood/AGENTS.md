@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a commit message that follows this repository's 50/72 policy."""
+"""Generate a commit message that follows the 50/72 formatting rule with sign-off."""
 
 from __future__ import annotations
 
