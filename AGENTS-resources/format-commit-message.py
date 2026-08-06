@@ -60,7 +60,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate a 50/72 commit message without committing."
     )
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
-    parser.add_argument("--body", help="Body prose; blank lines start paragraphs.")
+    parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
     parser.add_argument("--author", required=True, help="Agent name for the required sign-off.")
     parser.add_argument("--output", type=Path, help="Write the message to this UTF-8 file.")
     return parser.parse_args()
