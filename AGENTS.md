@@ -104,7 +104,7 @@ Example:
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
 
-Similarly, since backtick is the escape character in PowerShell, escape it with another backtick when you want to write a literal backtick in an expandable string.
+Since backtick is the escape character in PowerShell, escape it with another backtick when you want to write a literal backtick in an expandable string.
 
 ## Use Typed Languages
 This user prefers typed languages. Use strongly typed languages by default. For example: Use Typescript instead of Javascript whenever possible. Use type hints in Python code. For these and other gradually typed languages, always use the strictest mode of type checking available.
