@@ -9,7 +9,9 @@ Each commit must express one coherent change. A reviewer should be able to under
 
 If a commit's additions or deletions exceed 40 lines, you must split it up into smaller, coherent, independently reviewable commits if at all possible. If this is difficult, it is often helpful to come up with commits that each lay one specific piece of groundwork for the overall change.
 
-The exception to the 40-line rule is a change that is mechanically large but conceptually small. Examples include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Such a change may be made in a single commit even if it exceeds 40 lines, but the commit must contain no other changes.
+The main exception to the 40-line rule is a change that is mechanically large but conceptually small. Examples include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Such a change may be made in a single commit even if it exceeds 40 lines, but the commit must contain no other changes.
+
+If splitting a commit leaves a function partially unimplemented, leave code comments at the unimplemented parts explaining clearly what is left to be implemented in later commits. These comments don't count toward the 40-line budget.
 
 ### Avoid Common Pitfalls When Crafting Commits
 The following are common pitfalls to avoid when crafting a commit:
