@@ -104,19 +104,15 @@ Example:
 > noticeable speedup.
 
 #### Give Proper Attribution
-Each commit has an Author and optionally a Co-author. Use the following table to determine who is the Author and who, if anyone, is the Co-author. Here, "change" means the change(s) to the file(s), not the commit message. Proceed down the table until you hit the first case that matches.
+Each commit has an Author and optionally a Co-author. Use the following rules to determine who is the Author and who, if anyone, is the Co-author. Here, "change" means the change(s) to the file(s) introduced by the commit, not the commit message, and a "party" is either you or the user.
 
-| Case | Example | Author | Co-author |
-| ---- | ------- | ------ | --------- |
-| The user wrote 97% or more of the change themselves. | - | User | None |
-| The user wrote over 50% of the change themselves. | - | User | You |
-| The user described a particular algorithm, **and** over 50% of that algorithm's concepts are over 50% of what got implemented. | The user says, “This function is O(n²) because `lookup()` scans entries on every iteration. Construct `HashMap<Key, &Entry>` immediately before the loop, make duplicate keys last-write-wins, and replace the call to `lookup()` with `map.get()`.” The user's instructions fit well into the code base, and you make the requested changes with little to no extra adaptation to the code base. | User | You |
-| The user described a particular algorithm, but less than 50% of its concepts were implemented, or its concepts are less than 50% of what got implemented. | The user says, “Replace the repeated filesystem scans with a map from canonical path to parsed module, populated lazily on first access.” While implementing it, you discover that canonical paths cannot serve as stable keys because virtual modules have no filesystem path. You instead design a unified module-ID abstraction, add separate handling for virtual modules, introduce invalidation logic, and use the user's proposed map only for one portion of the final design. | You | User |
-| The user described one or more fragments of an algorithm, or prescribed a data structure to use, or described a data format, or described a protocol, **and** at least 3% of the concepts the user described were implemented. | The user says, “Add an LRU cache. It must hold no more than 128 entries, must be thread-safe, must not cache errors, and must expose hit/miss counters.” You choose the synchronization strategy, cache representation, eviction mechanics, and API changes. | You | User |
-| You wrote 97% or more of the change yourself. | - | You | None |
-| You wrote over 50% of the change yourself. | - | You | User |
+The Author is the party that introduced to the collaboration most of the change's implementation solution, even if the other party wrote most of the solution's textual representation. The Author that introduced the solution may have supplied it in pseudocode, English, literal text, or another form.
 
-The user describes something only when they originate it; concepts originated by you and repeated by the user do not count as concepts the user described.
+The other party is a Co-author if they did either of the following:
+- Introduced a substantial part of the change's implementation solution
+- Wrote 10% or more of the change's textual representation
+
+Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how those tools, techniques, or procedures are used.
 
 Specify the Author using Git's built-in commit author field. If there is a Co-author, then add the trailer `Co-authored by: <CO-AUTHOR>` to the commit message. Example (Codex Co-author):
 
