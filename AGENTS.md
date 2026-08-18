@@ -29,7 +29,7 @@ When you author a git commit message, follow the 50/72 rule:
 
 Capitalize the subject line. Write it in the imperative mood.
 
-Every commit message you author must end with a blank line followed by `Commit message authored by <AGENT>`, where `<AGENT>` is your name, such as `Codex` or `Claude`:
+Every commit message you author must have a blank line after the body (or subject if no body) followed by `Commit message authored by <AGENT>`, where `<AGENT>` is your name, such as `Codex` or `Claude`:
 
 > <your message>
 >
@@ -41,7 +41,7 @@ Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to format and valida
 python commit-message.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
-  --author Codex |
+  --message-author Codex |
   git commit -F -
 ```
 
@@ -102,6 +102,43 @@ Example:
 > By comparing strings, we can also now use a `HashMap` to do the reverse
 > lookup instead of linear searching a vector. This has caused a
 > noticeable speedup.
+
+#### Give Proper Attribution
+Each commit has an Author and optionally a Co-author. Use the following table to determine who is the Author and who, if anyone, is the Co-author. Here, "change" means the change(s) to the file(s), not the commit message. Proceed down the table until you hit the first case that matches.
+
+| Case | Example | Author | Co-author |
+| ---- | ------- | ------ | --------- |
+| The user wrote 97% or more of the change themselves. | - | User | None |
+| The user wrote over 50% of the change themselves. | - | User | You |
+| The user described a particular algorithm, **and** over 50% of that algorithm's concepts are over 50% of what got implemented. | The user says, “This function is O(n²) because `lookup()` scans entries on every iteration. Construct `HashMap<Key, &Entry>` immediately before the loop, make duplicate keys last-write-wins, and replace the call to `lookup()` with `map.get()`.” The user's instructions fit well into the code base, and you make the requested changes with little to no extra adaptation to the code base. | User | You |
+| The user described a particular algorithm, but less than 50% of its concepts were implemented, or its concepts are less than 50% of what got implemented. | The user says, “Replace the repeated filesystem scans with a map from canonical path to parsed module, populated lazily on first access.” While implementing it, you discover that canonical paths cannot serve as stable keys because virtual modules have no filesystem path. You instead design a unified module-ID abstraction, add separate handling for virtual modules, introduce invalidation logic, and use the user's proposed map only for one portion of the final design. | You | User |
+| The user described one or more fragments of an algorithm, or prescribed a data structure to use, or described a data format, or described a protocol, **and** at least 3% of the concepts the user described were implemented. | The user says, “Add an LRU cache. It must hold no more than 128 entries, must be thread-safe, must not cache errors, and must expose hit/miss counters.” You choose the synchronization strategy, cache representation, eviction mechanics, and API changes. | You | User |
+| You wrote 97% or more of the change yourself. | - | You | None |
+| You wrote over 50% of the change yourself. | - | You | User |
+
+The user describes something only when they originate it; concepts originated by you and repeated by the user do not count as concepts the user described.
+
+Specify the Author using Git's built-in commit author field. If there is a Co-author, then add the trailer `Co-authored by: <CO-AUTHOR>` to the commit message. Example (Codex Co-author):
+
+> <your message>
+>
+> Commit message authored by Codex
+>
+> Co-authored-by: Codex <noreply@openai.com>
+
+The user's name and email are the ones configured globally in Git. You should know your name and email.
+
+Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the Co-author trailer. Example:
+
+```powershell
+python commit-message.py `
+  --subject "Add selector cache to matching" `
+  --body "Add a selector cache to matching. This speeds up..." `
+  --message-author Codex `
+  --co-author-name Codex `
+  --co-author-email noreply@openai.com |
+  git commit -F -
+```
 
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
