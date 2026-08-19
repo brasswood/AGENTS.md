@@ -36,6 +36,32 @@ def parse_identity(value: str) -> Identity:
     return Identity(name, match.group("email"))
 
 
+def format_attribution_trailers(
+    change_author: Identity,
+    co_authors: list[Identity],
+    designers: list[Identity],
+    human_initiator: Identity,
+) -> list[str]:
+    if change_author in co_authors:
+        raise ValueError("the change author cannot also be a co-author")
+    if len(set(co_authors)) != len(co_authors):
+        raise ValueError("co-authors must not contain duplicates")
+    if len(set(designers)) != len(designers):
+        raise ValueError("designers must not contain duplicates")
+    if co_authors and not designers:
+        raise ValueError("at least one designer is required when co-authors are recorded")
+
+    record_designers = bool(co_authors) or any(
+        designer != change_author for designer in designers
+    )
+    trailers = [f"Co-authored-by: {co_author}" for co_author in co_authors]
+    if record_designers:
+        trailers.extend(f"Designed-by: {designer}" for designer in designers)
+    if human_initiator != change_author or trailers:
+        trailers.append(f"Initiated-by: {human_initiator}")
+    return trailers
+
+
 def validate_single_line(value: str, name: str, width: int) -> str:
     if "\n" in value or "\r" in value:
         raise ValueError(f"{name} must be one line")
