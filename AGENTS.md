@@ -104,7 +104,7 @@ Example:
 > noticeable speedup.
 
 #### Give Proper Attribution
-Each commit has one Author, zero or more Co-authors, zero or more Designers, and one Human Initiator. These must be attributed in the commit, independently of attributing the author of the commit _message_, so that others can determine provenance of the code.
+Each commit has one Author, zero or more Co-authors, zero or more Designers, and one Human Initiator. These must be attributed in the commit, independently of attributing the author of the commit _message_, so that others can determine the provenance of the change.
 
 First, use the following rules to determine who is what. Here, "change" means the change(s) to the file(s) introduced by the commit, not the commit message. A "party" could be you, the user, or someone else. A party "wrote" text when they introduced that literal text to the collaboration, regardless of who entered it into the change.
 
