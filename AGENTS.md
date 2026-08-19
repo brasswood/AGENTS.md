@@ -41,8 +41,10 @@ Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to format and valida
 python commit-message.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
-  --message-author Codex |
-  git commit -F -
+  --author Codex `
+  --change-author "Codex <noreply@openai.com>" `
+  --human-initiator "Codex <noreply@openai.com>" |
+  git commit --author="Codex <noreply@openai.com>" -F -
 ```
 
 This will validate the subject length, wrap the body, and append the signature.
@@ -149,10 +151,13 @@ Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the trailers.
 python commit-message.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
-  --message-author Codex `
-  --co-author-name Codex `
-  --co-author-email noreply@openai.com |
-  git commit -F -
+  --author Codex `
+  --change-author "Codex <noreply@openai.com>" `
+  --co-author "John Smith <john.smith@example.com>" `
+  --designer "Codex <noreply@openai.com>" `
+  --designer "John Smith <john.smith@example.com>" `
+  --human-initiator "John Smith <john.smith@example.com>" |
+  git commit --author="Codex <noreply@openai.com>" -F -
 ```
 
 #### Mind PowerShell Newlines
