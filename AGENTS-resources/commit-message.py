@@ -29,10 +29,12 @@ class Identity:
 def parse_identity(value: str) -> Identity:
     match = IDENTITY_PATTERN.fullmatch(value)
     if match is None or value != value.strip():
-        raise ValueError("identity must use the format 'Name <email>'")
+        raise argparse.ArgumentTypeError("identity must use the format 'Name <email>'")
     name = match.group("name")
     if name != name.strip():
-        raise ValueError("identity name must not have surrounding spaces")
+        raise argparse.ArgumentTypeError(
+            "identity name must not have surrounding spaces"
+        )
     return Identity(name, match.group("email"))
 
 

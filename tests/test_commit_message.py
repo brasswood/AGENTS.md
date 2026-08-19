@@ -19,6 +19,38 @@ def run_helper(*arguments: str) -> subprocess.CompletedProcess[str]:
 
 
 class CommitMessageTests(unittest.TestCase):
+    def test_rejects_co_author_without_designer(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test missing designer",
+            "--author",
+            "Codex",
+            "--change-author",
+            CODEX,
+            "--co-author",
+            ANDREW,
+            "--human-initiator",
+            ANDREW,
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("designer is required", result.stderr)
+
+    def test_rejects_malformed_identity(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test malformed identity",
+            "--author",
+            "Codex",
+            "--change-author",
+            "Codex",
+            "--human-initiator",
+            CODEX,
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Name <email>", result.stderr)
+
     def test_orders_all_attribution_trailers(self) -> None:
         result = run_helper(
             "--subject",
@@ -55,6 +87,8 @@ class CommitMessageTests(unittest.TestCase):
             "--author",
             "Codex",
             "--change-author",
+            CODEX,
+            "--designer",
             CODEX,
             "--human-initiator",
             CODEX,
