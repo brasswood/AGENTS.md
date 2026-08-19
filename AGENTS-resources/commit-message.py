@@ -8,11 +8,32 @@ import argparse
 import re
 import sys
 import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 
 SUBJECT_WIDTH = 50
 BODY_WIDTH = 72
 AUTHOR_PREFIX = "Commit message authored by "
+IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
+
+
+@dataclass(frozen=True)
+class Identity:
+    name: str
+    email: str
+
+    def __str__(self) -> str:
+        return f"{self.name} <{self.email}>"
+
+
+def parse_identity(value: str) -> Identity:
+    match = IDENTITY_PATTERN.fullmatch(value)
+    if match is None or value != value.strip():
+        raise ValueError("identity must use the format 'Name <email>'")
+    name = match.group("name")
+    if name != name.strip():
+        raise ValueError("identity name must not have surrounding spaces")
+    return Identity(name, match.group("email"))
 
 
 def validate_single_line(value: str, name: str, width: int) -> str:
