@@ -115,11 +115,11 @@ First, use the following rules to determine who is what. Here, "change" means th
 | Designer | Any party that introduced a substantial part of the change's implementation solution[^implementation-solution], whether they supplied it in pseudocode, English, literal text, or another form |
 | Human Initiator | The human collaborating with the agent, or the human at the beginning of a subagent chain, that ultimately instigated the work leading to change |
 
-[^ties]: Ask the user to break ties.
+[^implementation-solution]: The implementation solution is the particular set of tools, techniques, and procedures, together with how they are used. Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how they are used.
 
 [^substantive]: Substantive text is literal text that expresses the change's implementation solution, rather than ancillary text that merely supports it.
 
-[^implementation-solution]: The implementation solution is the particular set of tools, techniques, and procedures, together with how they are used. Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how they are used.
+[^ties]: Ask the user to break ties.
 
 Once you have determined who gets what attributions, record them in the commit in order from top to bottom as follows:
 
