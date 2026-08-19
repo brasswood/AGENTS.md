@@ -132,15 +132,18 @@ Once you have determined who gets what attributions, record them in the commit i
 
 Name parties using Git's standard `Name <email>` format. The user's name and email are the ones configured globally in Git. You should know your name and email.
 
+Example message with message attribution and trailers:
+
 > <your message>
 >
 > Commit message authored by Codex
 >
-> Co-authored-by: Codex <noreply@openai.com>
+> Co-authored-by: John Smith <john.smith@example.com>
+> Designed-by: Codex <noreply@openai.com>
+> Designed-by: John Smith <john.smith@example.com>
+> Initiated-by: John Smith <john.smith@example.com>
 
-
-
-Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the Co-author trailer. Example:
+Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the trailers. Example:
 
 ```powershell
 python commit-message.py `
