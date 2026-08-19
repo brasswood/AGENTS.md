@@ -130,7 +130,7 @@ Once you have determined who gets what attributions, record them in the commit i
 | Designer | Record all Designers when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers |
 | Human Initiator | Only exclude when the same as the Author and no Co-authors or Designers are recorded | `Initiated-by: <HUMAN-INITIATOR>` commit message trailer |
 
-In commit authors/trailers, name parties using Git's standard `Name <email>` format. The user's name and email are the ones configured globally in Git. You should know your name and email.
+Name parties using Git's standard `Name <email>` format. The user's name and email are the ones configured globally in Git. You should know your name and email.
 
 > <your message>
 >
