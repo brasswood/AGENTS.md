@@ -126,8 +126,8 @@ Once you have determined who gets what attributions, record them in the commit i
 | Attribution | When to record | Method |
 | ----------- | -------------- | ------ |
 | Author | Always | Git commits' built-in author field (e.g., `git commit --author=<AUTHOR>`) |
-| Co-author | Record all Co-authors | `Co-authored-by: <CO-AUTHOR>` commit message trailers |
-| Designer | Record all Designers when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers |
+| Co-author | Record all Co-authors | `Co-authored-by: <CO-AUTHOR>` commit message trailers, in descending order of how much substantive text each Co-author wrote |
+| Designer | Record all Designers when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers, in descending order of how much of the implementation solution each Designer introduced |
 | Human Initiator | Only exclude when the same as the Author and no Co-authors or Designers are recorded | `Initiated-by: <HUMAN-INITIATOR>` commit message trailer |
 
 Name parties using Git's standard `Name <email>` format. The user's name and email are the ones configured globally in Git. You should know your name and email.
