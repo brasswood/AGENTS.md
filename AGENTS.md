@@ -117,7 +117,7 @@ First, use the following rules to determine who is what. Here, "change" means th
 
 [^ties]: Ask the user to break ties.
 
-[^substantive]: Substantive text is literal text that expresses the change's implementation solution, rather than merely supporting or mechanically following from it.
+[^substantive]: Substantive text is literal text that expresses the change's implementation solution, rather than ancillary text that merely supports it.
 
 [^implementation-solution]: The implementation solution is the particular set of tools, techniques, and procedures, together with how they are used. Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how they are used.
 
