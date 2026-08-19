@@ -93,13 +93,26 @@ def wrap_body(body: str) -> str:
     return "\n\n".join(paragraphs)
 
 
-def format_message(subject: str, body: str | None, author: str) -> str:
+def format_message(
+    subject: str,
+    body: str | None,
+    author: str,
+    change_author: Identity,
+    co_authors: list[Identity],
+    designers: list[Identity],
+    human_initiator: Identity,
+) -> str:
     subject = validate_single_line(subject, "subject", SUBJECT_WIDTH)
     author = validate_single_line(author, "author", BODY_WIDTH - len(AUTHOR_PREFIX))
     parts = [subject]
     if body and body.strip():
         parts.extend(("", wrap_body(body)))
     parts.extend(("", f"{AUTHOR_PREFIX}{author}"))
+    trailers = format_attribution_trailers(
+        change_author, co_authors, designers, human_initiator
+    )
+    if trailers:
+        parts.extend(("", *trailers))
     return "\n".join(parts) + "\n"
 
 
@@ -109,7 +122,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
     parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
-    parser.add_argument("--author", required=True, help="Agent name for the required sign-off.")
+    parser.add_argument("--author", required=True, help="Agent name for the message sign-off.")
+    parser.add_argument("--change-author", required=True, type=parse_identity)
+    parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
+    parser.add_argument("--designer", action="append", default=[], type=parse_identity)
+    parser.add_argument("--human-initiator", required=True, type=parse_identity)
     parser.add_argument("--output", type=Path, help="Write the message to this UTF-8 file.")
     return parser.parse_args()
 
@@ -117,7 +134,15 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
-        message = format_message(args.subject, args.body, args.author)
+        message = format_message(
+            args.subject,
+            args.body,
+            args.author,
+            args.change_author,
+            args.co_author,
+            args.designer,
+            args.human_initiator,
+        )
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
