@@ -104,17 +104,33 @@ Example:
 > noticeable speedup.
 
 #### Give Proper Attribution
-Each commit has an Author and optionally a Co-author. Use the following rules to determine who is the Author and who, if anyone, is the Co-author. Here, "change" means the change(s) to the file(s) introduced by the commit, not the commit message, and a "party" is either you or the user.
+Each commit has one Author, zero or more Co-authors, zero or more Designers, and one Human Initiator. These must be attributed in the commit, independently of attributing the author of the commit _message_, so that others can determine provenance of the code.
 
-The Author is the party that introduced to the collaboration most of the change's implementation solution, even if the other party wrote most of the solution's textual representation. The Author that introduced the solution may have supplied it in pseudocode, English, literal text, or another form.
+First, use the following rules to determine who is what. Here, "change" means the change(s) to the file(s) introduced by the commit, not the commit message. A "party" could be you, the user, or someone else.
 
-The other party is a Co-author if they did either of the following:
-- Introduced a substantial part of the change's implementation solution
-- Wrote 10% or more of the change's textual representation
+| Attribution | Definition |
+| ----------- | ---------- |
+| Author | The party that wrote the majority[^ties] of the change's _substantive text[^substantive]_ |
+| Co-author | Any party other than the Author that wrote 25% or more of the change's substantive text |
+| Designer | Any party that introduced a substantial part of the change's implementation solution[^implementation-solution], whether they supplied it in pseudocode, English, literal text, or another form |
+| Human Initiator | The human collaborating with the agent, or the human at the beginning of a subagent chain, that ultimately instigated the work leading to change |
 
-Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how those tools, techniques, or procedures are used.
+[^ties]: Ask the user to break ties.
 
-Specify the Author using Git's built-in commit author field. If there is a Co-author, then add the trailer `Co-authored by: <CO-AUTHOR>` to the commit message. Example (Codex Co-author):
+[^substantive]: Substantive text is literal text that expresses the change's implementation solution, rather than merely supporting or mechanically following from it..
+
+[^implementation-solution]: The implementation solution is the unique set of tools, techniques, and procedures, combined with how they are used. Constraints count as part of the implementation solution only when they directly prescribe specific tools, techniques, or procedures **and** substantially determine how those tools, techniques, or procedures are used.
+
+Once you have determined who gets what attributions, record them in the commit in order from top to bottom as follows:
+
+| Attribution | When to record | Method |
+| ----------- | -------------- | ------ |
+| Author | Always | Git commits' built-in author field (e.g., `git commit --author=<AUTHOR>`) |
+| Co-author | Record all Co-authors | `Co-authored-by: <CO-AUTHOR>` commit message trailers |
+| Designer | Record all Designers when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers |
+| Human Initiator | Only exclude when the same as the Author and no Co-authors or Designers are recorded | `Initiated-by: <HUMAN-INITIATOR>` commit message trailer |
+
+In commit authors/trailers, name parties using Git's standard `Name <email>` format. The user's name and email are the ones configured globally in Git. You should know your name and email.
 
 > <your message>
 >
@@ -122,7 +138,7 @@ Specify the Author using Git's built-in commit author field. If there is a Co-au
 >
 > Co-authored-by: Codex <noreply@openai.com>
 
-The user's name and email are the ones configured globally in Git. You should know your name and email.
+
 
 Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the Co-author trailer. Example:
 
