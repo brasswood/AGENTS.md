@@ -117,7 +117,7 @@ First, use the following rules to determine who is what. Here, "change" means th
 | Designer | Any party that introduced a substantial part of the change's _implementation solution[^implementation-solution]_, whether they supplied it in pseudocode, English, literal text, or another form |
 | Human Initiator | The human collaborating with the agent, or the human at the beginning of a subagent chain, that ultimately instigated the work leading to change |
 
-[^implementation-solution]: The implementation solution is the specific set of tools, techniques, procedures, and structures used internally to implement the change, even when the change is not code. This doesn't mean those merely used to produce, edit, inspect, or verify the change; it means those embodied in the change.
+[^implementation-solution]: The implementation solution is the specific set of internal tools, techniques, procedures, and structures that constitute the change, even when they are not code.
 
 [^substantive]: Substantive text is literal text that expresses the change's implementation solution, rather than ancillary text that merely supports it.
 
