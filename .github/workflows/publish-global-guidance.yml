@@ -1,0 +1,45 @@
+name: Publish global-guidance skill
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - AGENTS.md
+      - AGENTS-resources/commit-message.py
+      - .github/workflows/publish-global-guidance.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-global-guidance
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Amp
+        run: npm install --global @sourcegraph/amp
+      - name: Publish personal skill
+        env:
+          AMP_API_KEY: ${{ secrets.AMP_API_KEY }}
+        run: |
+          set -euo pipefail
+          repository="$RUNNER_TEMP/user-skills"
+          skill="$repository/global-guidance"
+          amp clone user-skills "$repository"
+          rm -rf "$skill"
+          mkdir -p "$skill/scripts"
+          printf '%s\n' '---' 'name: global-guidance' \
+            'description: Provides global coding, commit, and engineering guidance. Use before starting any work in Amp.' \
+            '---' '' > "$skill/SKILL.md"
+          cat AGENTS.md >> "$skill/SKILL.md"
+          cp AGENTS-resources/commit-message.py "$skill/scripts/commit-message.py"
+          git -C "$repository" add global-guidance
+          git -C "$repository" diff --cached --quiet && exit 0
+          git -C "$repository" config user.name 'github-actions[bot]'
+          git -C "$repository" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$repository" commit -m 'Publish global-guidance skill'
+          git -C "$repository" push origin HEAD:main
