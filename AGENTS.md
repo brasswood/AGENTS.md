@@ -35,7 +35,10 @@ Every commit message you author must have a blank line after the body (or subjec
 >
 > Commit message authored by <AGENT>
 
-Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to format and validate your message. Example:
+Prefer to use the `commit-message.py` bundled with these instructions to format
+and validate your message. When loaded from the `global-guidance` skill, resolve
+`scripts/commit-message.py` relative to the skill directory. In this repository,
+use `AGENTS-resources/commit-message.py`. Example:
 
 ```powershell
 python commit-message.py `
@@ -145,7 +148,7 @@ Example message with message attribution and trailers:
 > Designed-by: John Smith <john.smith@example.com>
 > Initiated-by: John Smith <john.smith@example.com>
 
-Prefer to use `~/.codex/AGENTS-resources/commit-message.py` to add the trailers. Example:
+Prefer to use the same bundled `commit-message.py` to add the trailers. Example:
 
 ```powershell
 python commit-message.py `
