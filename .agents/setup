@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf 'Ensuring Python is available...\n'
+if ! command -v python3 >/dev/null 2>&1; then
+  sudo apt-get update
+  sudo apt-get install -y python3
+fi
+python3 --version
+
+printf 'Verifying the repository toolchain...\n'
+time python3 -B -m unittest discover -s tests
