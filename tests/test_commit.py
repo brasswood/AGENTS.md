@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).parents[1] / "AGENTS-resources" / "commit-message.py"
+SCRIPT = Path(__file__).parents[1] / "AGENTS-resources" / "commit.py"
 CODEX = "Codex <noreply@openai.com>"
 ANDREW = "Andrew Riachi <andrew.riachi@gmail.com>"
 

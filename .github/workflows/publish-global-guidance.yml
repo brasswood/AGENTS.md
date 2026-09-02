@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - AGENTS.md
-      - AGENTS-resources/commit-message.py
+      - AGENTS-resources/commit.py
       - .github/workflows/publish-global-guidance.yml
 
 permissions:
@@ -36,7 +36,7 @@ jobs:
             'description: Provides global coding, commit, and engineering guidance. Use before starting any work in Amp.' \
             '---' '' > "$skill/SKILL.md"
           cat AGENTS.md >> "$skill/SKILL.md"
-          cp AGENTS-resources/commit-message.py "$skill/scripts/commit-message.py"
+          cp AGENTS-resources/commit.py "$skill/scripts/commit.py"
           git -C "$repository" add global-guidance
           git -C "$repository" diff --cached --quiet && exit 0
           git -C "$repository" config user.name 'github-actions[bot]'

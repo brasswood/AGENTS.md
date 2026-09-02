@@ -2,11 +2,11 @@
 
 `./AGENTS.md` is licensed under the MIT License (see `./LICENSE`)
 
-`AGENTS-resources/commit-message.py` is licensed under the CC0 1.0 Universal License.
+`AGENTS-resources/commit.py` is licensed under the CC0 1.0 Universal License.
 
 ## Amp personal skill
 
-Relevant pushes to `main` publish `AGENTS.md` and its commit-message helper as
+Relevant pushes to `main` publish `AGENTS.md` and its commit helper as
 the `global-guidance` Amp personal skill. One-time setup:
 
 1. Create an access token in Amp **Personal Settings → Security**.
