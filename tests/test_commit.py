@@ -27,6 +27,21 @@ def run_helper(
     )
 
 
+def run_with_git_arguments(*arguments: str) -> subprocess.CompletedProcess[str]:
+    return run_helper(
+        "--subject",
+        "Test forwarded arguments",
+        "--message-author",
+        "Codex",
+        "--author",
+        CODEX,
+        "--human-initiator",
+        CODEX,
+        "--",
+        *arguments,
+    )
+
+
 def create_commit(*arguments: str) -> tuple[subprocess.CompletedProcess[str], str]:
     with tempfile.TemporaryDirectory() as directory:
         repository = Path(directory)
@@ -76,21 +91,32 @@ class CommitTests(unittest.TestCase):
         self.assertIn("Name <email>", result.stderr)
 
     def test_rejects_forwarded_author_override(self) -> None:
-        result = run_helper(
-            "--subject",
-            "Test author override",
-            "--message-author",
-            "Codex",
-            "--author",
-            CODEX,
-            "--human-initiator",
-            CODEX,
-            "--",
-            f"--author={ANDREW}",
-        )
+        result = run_with_git_arguments(f"--author={ANDREW}")
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("must not override the author", result.stderr)
+
+    def test_rejects_forwarded_message_options(self) -> None:
+        message_options = (
+            "-m", "-mText", "-amText", "--message", "--message=Text", "--no-message",
+            "-F", "-Ffile", "-aFfile", "--file", "--file=file", "--no-file",
+            "-c", "-cHEAD", "-acHEAD", "--reedit-message", "--no-reedit-message",
+            "-C", "-CHEAD", "-aCHEAD", "--reuse-message", "--no-reuse-message",
+            "--fixup", "--fixup=HEAD", "--no-fixup",
+            "--squash", "--squash=HEAD", "--no-squash",
+        )
+
+        for option in message_options:
+            with self.subTest(option=option):
+                result = run_with_git_arguments(option)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("must not override the message", result.stderr)
+
+    def test_allows_message_text_outside_option_names(self) -> None:
+        for arguments in (("--", "--message"), ("-Smycommit",)):
+            with self.subTest(arguments=arguments):
+                result = run_with_git_arguments(*arguments)
+                self.assertNotIn("must not override the message", result.stderr)
 
     def test_orders_all_attribution_trailers(self) -> None:
         result, commit = create_commit(
