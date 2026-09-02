@@ -46,7 +46,7 @@ python commit.py `
   --body "Add a selector cache to matching. This speeds up..." `
   --message-author Codex `
   --author "Codex <noreply@openai.com>" `
-  --human-initiator "Codex <noreply@openai.com>" `
+  --human-initiator "John Smith <john.smith@example.com>" `
   -- --all
 ```
 
