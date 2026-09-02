@@ -115,7 +115,7 @@ class CommitTests(unittest.TestCase):
     def test_allows_message_text_outside_option_names(self) -> None:
         for arguments in (("--", "--message"), ("-Smycommit",)):
             with self.subTest(arguments=arguments):
-                result = run_with_git_arguments(*arguments)
+                result = run_with_git_arguments("--dry-run", *arguments)
                 self.assertNotIn("must not override the message", result.stderr)
 
     def test_orders_all_attribution_trailers(self) -> None:
