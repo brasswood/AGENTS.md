@@ -75,6 +75,23 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("Name <email>", result.stderr)
 
+    def test_rejects_forwarded_author_override(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test author override",
+            "--message-author",
+            "Codex",
+            "--author",
+            CODEX,
+            "--human-initiator",
+            CODEX,
+            "--",
+            f"--author={ANDREW}",
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("must not override the author", result.stderr)
+
     def test_orders_all_attribution_trailers(self) -> None:
         result, commit = create_commit(
             "--subject",
