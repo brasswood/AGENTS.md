@@ -17,6 +17,16 @@ SUBJECT_WIDTH = 50
 BODY_WIDTH = 72
 AUTHOR_PREFIX = "Commit message authored by "
 IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
+MESSAGE_LONG_OPTIONS = {
+    "file",
+    "fixup",
+    "message",
+    "reedit-message",
+    "reuse-message",
+    "squash",
+}
+MESSAGE_SHORT_OPTIONS = {"F", "m", "c", "C"}
+CLUSTERABLE_SHORT_OPTIONS = set("aeinopqsvz")
 
 
 @dataclass(frozen=True)
@@ -132,8 +142,20 @@ def validate_git_arguments(arguments: list[str]) -> None:
     for argument in arguments:
         if argument == "--":
             return
-        if argument.split("=", 1)[0] in author_options:
+        option = argument.split("=", 1)[0]
+        if option in author_options:
             raise ValueError("extra Git arguments must not override the author")
+        long_option = option.removeprefix("--").removeprefix("no-")
+        if argument.startswith("--") and long_option in MESSAGE_LONG_OPTIONS:
+            raise ValueError("extra Git arguments must not override the message")
+        if argument.startswith("-") and not argument.startswith("--"):
+            for short_option in argument[1:]:
+                if short_option in MESSAGE_SHORT_OPTIONS:
+                    raise ValueError(
+                        "extra Git arguments must not override the message"
+                    )
+                if short_option not in CLUSTERABLE_SHORT_OPTIONS:
+                    break
 
 
 def run_commit(message: str, author: Identity, arguments: list[str]) -> int:
