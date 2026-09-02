@@ -35,8 +35,8 @@ Every commit message you author must have a blank line after the body (or subjec
 >
 > Commit message authored by <AGENT>
 
-Prefer to use the `commit.py` bundled with these instructions to format
-and validate your message. When loaded from the `global-guidance` skill, resolve
+Prefer to use the `commit.py` bundled with these instructions to create the
+commit. When loaded from the `global-guidance` skill, resolve
 `scripts/commit.py` relative to the skill directory. Otherwise,
 use `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`. Example:
 
@@ -46,11 +46,13 @@ python commit.py `
   --body "Add a selector cache to matching. This speeds up..." `
   --message-author Codex `
   --author "Codex <noreply@openai.com>" `
-  --human-initiator "Codex <noreply@openai.com>" |
-  git commit --author="Codex <noreply@openai.com>" -F -
+  --human-initiator "Codex <noreply@openai.com>" `
+  -- --all
 ```
 
-This will validate the subject length, wrap the body, and append the signature.
+This validates the message and attribution, then runs `git commit`. Arguments
+after `--` are forwarded to `git commit`. Do not forward author options; the
+helper supplies the validated author.
 
 Commit messages must, at minimum, convey:
 
@@ -130,7 +132,7 @@ Once you have determined who gets what attributions, record them in the commit i
 
 | Attribution | When to record | Method |
 | ----------- | -------------- | ------ |
-| Author | Always | Git commits' built-in author field (e.g., `git commit --author=<AUTHOR>`) |
+| Author | Always | Git commits' built-in author field (set with `commit.py --author=<AUTHOR>`) |
 | Co-author | Record all Co-authors | `Co-authored-by: <CO-AUTHOR>` commit message trailers, in descending order of how much substantive text each Co-author wrote |
 | Designer | Record all Designers only when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers, in descending order of how much of the implementation solution each Designer introduced |
 | Human Initiator | Only exclude when the same as the Author and no Co-authors or Designers are recorded | `Initiated-by: <HUMAN-INITIATOR>` commit message trailer |
@@ -159,8 +161,8 @@ python commit.py `
   --co-author "John Smith <john.smith@example.com>" `
   --designer "Codex <noreply@openai.com>" `
   --designer "John Smith <john.smith@example.com>" `
-  --human-initiator "John Smith <john.smith@example.com>" |
-  git commit --author="Codex <noreply@openai.com>" -F -
+  --human-initiator "John Smith <john.smith@example.com>" `
+  -- --all
 ```
 
 #### Mind PowerShell Newlines
