@@ -37,8 +37,8 @@ Every commit message you author must have a blank line after the body (or subjec
 
 Prefer to use the `commit-message.py` bundled with these instructions to format
 and validate your message. When loaded from the `global-guidance` skill, resolve
-`scripts/commit-message.py` relative to the skill directory. In this repository,
-use `AGENTS-resources/commit-message.py`. Example:
+`scripts/commit-message.py` relative to the skill directory. Otherwise,
+use `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit-message.py`. Example:
 
 ```powershell
 python commit-message.py `
