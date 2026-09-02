@@ -52,8 +52,8 @@ python commit.py `
 
 This validates the subject length, wraps the body, appends the signature,
 verifies attribution (discussed later), then runs `git commit`. Arguments after
-`--` are forwarded to `git commit`. Do not forward `--author` or `-m/--message`;
-the helper supplies these.
+`--` are forwarded to `git commit`. Do not forward author or message-source
+options; the helper supplies both.
 
 Commit messages must, at minimum, convey:
 
