@@ -6,7 +6,9 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
+import tempfile
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
@@ -118,6 +120,32 @@ def format_message(
     if trailers:
         parts.extend(("", *trailers))
     return "\n".join(parts) + "\n"
+
+
+def validate_git_arguments(arguments: list[str]) -> None:
+    author_options = {
+        "--author",
+        "--no-author",
+        "--reset-author",
+        "--no-reset-author",
+    }
+    for argument in arguments:
+        if argument == "--":
+            return
+        if argument.split("=", 1)[0] in author_options:
+            raise ValueError("extra Git arguments must not override the author")
+
+
+def run_commit(message: str, author: Identity, arguments: list[str]) -> int:
+    validate_git_arguments(arguments)
+    with tempfile.TemporaryDirectory(prefix="commit-") as directory:
+        message_path = Path(directory) / "message"
+        message_path.write_text(message, encoding="utf-8", newline="\n")
+        result = subprocess.run(
+            ["git", "commit", f"--author={author}", f"--file={message_path}", *arguments],
+            check=False,
+        )
+    return result.returncode
 
 
 def parse_args() -> argparse.Namespace:
