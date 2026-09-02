@@ -39,12 +39,12 @@ def parse_identity(value: str) -> Identity:
 
 
 def format_attribution_trailers(
-    change_author: Identity,
+    author: Identity,
     co_authors: list[Identity],
     designers: list[Identity],
     human_initiator: Identity,
 ) -> list[str]:
-    if change_author in co_authors:
+    if author in co_authors:
         raise ValueError("the change author cannot also be a co-author")
     if len(set(co_authors)) != len(co_authors):
         raise ValueError("co-authors must not contain duplicates")
@@ -54,12 +54,12 @@ def format_attribution_trailers(
         raise ValueError("at least one designer is required when co-authors are recorded")
 
     record_designers = bool(co_authors) or any(
-        designer != change_author for designer in designers
+        designer != author for designer in designers
     )
     trailers = [f"Co-authored-by: {co_author}" for co_author in co_authors]
     if record_designers:
         trailers.extend(f"Designed-by: {designer}" for designer in designers)
-    if human_initiator != change_author or trailers:
+    if human_initiator != author or trailers:
         trailers.append(f"Initiated-by: {human_initiator}")
     return trailers
 
@@ -98,20 +98,22 @@ def wrap_body(body: str) -> str:
 def format_message(
     subject: str,
     body: str | None,
-    author: str,
-    change_author: Identity,
+    message_author: str,
+    author: Identity,
     co_authors: list[Identity],
     designers: list[Identity],
     human_initiator: Identity,
 ) -> str:
     subject = validate_single_line(subject, "subject", SUBJECT_WIDTH)
-    author = validate_single_line(author, "author", BODY_WIDTH - len(AUTHOR_PREFIX))
+    message_author = validate_single_line(
+        message_author, "message author", BODY_WIDTH - len(AUTHOR_PREFIX)
+    )
     parts = [subject]
     if body and body.strip():
         parts.extend(("", wrap_body(body)))
-    parts.extend(("", f"{AUTHOR_PREFIX}{author}"))
+    parts.extend(("", f"{AUTHOR_PREFIX}{message_author}"))
     trailers = format_attribution_trailers(
-        change_author, co_authors, designers, human_initiator
+        author, co_authors, designers, human_initiator
     )
     if trailers:
         parts.extend(("", *trailers))
@@ -124,8 +126,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
     parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
-    parser.add_argument("--author", required=True, help="Agent name for the message sign-off.")
-    parser.add_argument("--change-author", required=True, type=parse_identity)
+    parser.add_argument(
+        "--message-author", required=True, help="Agent name for the message sign-off."
+    )
+    parser.add_argument("--author", required=True, type=parse_identity)
     parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
     parser.add_argument("--designer", action="append", default=[], type=parse_identity)
     parser.add_argument("--human-initiator", required=True, type=parse_identity)
@@ -139,8 +143,8 @@ def main() -> int:
         message = format_message(
             args.subject,
             args.body,
+            args.message_author,
             args.author,
-            args.change_author,
             args.co_author,
             args.designer,
             args.human_initiator,

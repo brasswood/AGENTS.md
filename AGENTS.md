@@ -44,8 +44,8 @@ use `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`. Example:
 python commit.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
-  --author Codex `
-  --change-author "Codex <noreply@openai.com>" `
+  --message-author Codex `
+  --author "Codex <noreply@openai.com>" `
   --human-initiator "Codex <noreply@openai.com>" |
   git commit --author="Codex <noreply@openai.com>" -F -
 ```
@@ -154,8 +154,8 @@ Prefer to use the same bundled `commit.py` to add the trailers. Example:
 python commit.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
-  --author Codex `
-  --change-author "Codex <noreply@openai.com>" `
+  --message-author Codex `
+  --author "Codex <noreply@openai.com>" `
   --co-author "John Smith <john.smith@example.com>" `
   --designer "Codex <noreply@openai.com>" `
   --designer "John Smith <john.smith@example.com>" `
