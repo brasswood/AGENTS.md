@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: CC0-1.0
-"""Format a commit message that follows the 50/72 rule with sign-off."""
+"""Create a Git commit with a validated 50/72 message and attribution."""
 
 from __future__ import annotations
 
@@ -148,9 +148,17 @@ def run_commit(message: str, author: Identity, arguments: list[str]) -> int:
     return result.returncode
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args() -> tuple[argparse.Namespace, list[str]]:
+    arguments = sys.argv[1:]
+    if "--" in arguments:
+        separator = arguments.index("--")
+        helper_arguments = arguments[:separator]
+        git_arguments = arguments[separator + 1 :]
+    else:
+        helper_arguments = arguments
+        git_arguments = []
     parser = argparse.ArgumentParser(
-        description="Generate a 50/72 commit message without committing."
+        description="Create a Git commit with a validated 50/72 message."
     )
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
     parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
@@ -161,12 +169,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
     parser.add_argument("--designer", action="append", default=[], type=parse_identity)
     parser.add_argument("--human-initiator", required=True, type=parse_identity)
-    parser.add_argument("--output", type=Path, help="Write the message to this UTF-8 file.")
-    return parser.parse_args()
+    return parser.parse_args(helper_arguments), git_arguments
 
 
 def main() -> int:
-    args = parse_args()
+    args, git_arguments = parse_args()
     try:
         message = format_message(
             args.subject,
@@ -177,14 +184,10 @@ def main() -> int:
             args.designer,
             args.human_initiator,
         )
+        return run_commit(message, args.author, git_arguments)
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    if args.output:
-        args.output.write_text(message, encoding="utf-8", newline="\n")
-    else:
-        sys.stdout.write(message)
-    return 0
 
 
 if __name__ == "__main__":
