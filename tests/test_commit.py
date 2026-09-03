@@ -75,6 +75,33 @@ def create_commit(*arguments: str) -> tuple[subprocess.CompletedProcess[str], st
 
 
 class CommitTests(unittest.TestCase):
+    def test_accepts_40_added_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "lines.txt").write_text("line\n" * 40, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+
+            result = run_test_commit(repository)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_counts_additions_and_deletions_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            path = repository / "lines.txt"
+            path.write_text("old\n" * 40, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+            base = run_test_commit(repository)
+            self.assertEqual(base.returncode, 0, base.stderr)
+            path.write_text("new\n" * 40, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+
+            result = run_test_commit(repository)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_rejects_41_added_lines(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
