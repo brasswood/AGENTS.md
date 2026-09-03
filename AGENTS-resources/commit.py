@@ -17,6 +17,7 @@ SUBJECT_WIDTH = 50
 BODY_WIDTH = 72
 CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
+LARGE_CHANGE_PREFIX = "Large commit justification: "
 IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
 MESSAGE_LONG_OPTIONS = {
     "file",
@@ -121,6 +122,7 @@ def wrap_body(body: str) -> str:
 def format_message(
     subject: str,
     body: str | None,
+    large_change_justification: str | None,
     message_author: str,
     author: Identity,
     co_authors: list[Identity],
@@ -134,6 +136,13 @@ def format_message(
     parts = [subject]
     if body and body.strip():
         parts.extend(("", wrap_body(body)))
+    if large_change_justification is not None:
+        justification = validate_single_line(
+            large_change_justification,
+            "large-change justification",
+            BODY_WIDTH - len(LARGE_CHANGE_PREFIX),
+        )
+        parts.extend(("", f"{LARGE_CHANGE_PREFIX}{justification}"))
     parts.extend(("", f"{AUTHOR_PREFIX}{message_author}"))
     trailers = format_attribution_trailers(
         author, co_authors, designers, human_initiator
@@ -244,7 +253,9 @@ def run_commit(
         )
     if large_change_justification is not None:
         justification = validate_single_line(
-            large_change_justification, "large-change justification", BODY_WIDTH
+            large_change_justification,
+            "large-change justification",
+            BODY_WIDTH - len(LARGE_CHANGE_PREFIX),
         )
         print(
             f"warning: allowing {additions} additions and {deletions} deletions: "
@@ -292,6 +303,7 @@ def main() -> int:
         message = format_message(
             args.subject,
             args.body,
+            args.large_change_justification,
             args.message_author,
             args.author,
             args.co_author,
