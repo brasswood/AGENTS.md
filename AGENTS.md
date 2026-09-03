@@ -46,14 +46,23 @@ python commit.py `
   --body "Add a selector cache to matching. This speeds up..." `
   --message-author Codex `
   --author "Codex <noreply@openai.com>" `
-  --human-initiator "John Smith <john.smith@example.com>" `
-  -- --all
+  --human-initiator "John Smith <john.smith@example.com>"
 ```
 
 This validates the subject length, wraps the body, appends the signature,
-verifies attribution (discussed later), then runs `git commit`. Arguments after
-`--` are forwarded to `git commit`. Do not forward author or message-source
-options; the helper supplies both.
+verifies attribution (discussed later), then runs `git commit`. Stage the exact
+commit contents before invoking it. The helper rejects content-selection
+arguments such as `--all` and pathspecs so that it can check the staged index.
+It refuses a commit with more than 40 additions or deletions. If that numerical
+check exceeds the limit but this guidance still permits the commit, pass
+`--large-change-justification` with a concise reason. The helper records that
+reason in the commit message. Do not use the override merely because a larger
+change has already been written.
+
+Arguments after `--` are forwarded to `git commit`. Do not forward content
+selection, author, or message-source options; the helper supplies or validates
+those concerns. For `--amend`, the helper measures the complete replacement
+commit against its first parent.
 
 Commit messages must, at minimum, convey:
 
@@ -162,8 +171,7 @@ python commit.py `
   --co-author "John Smith <john.smith@example.com>" `
   --designer "Codex <noreply@openai.com>" `
   --designer "John Smith <john.smith@example.com>" `
-  --human-initiator "John Smith <john.smith@example.com>" `
-  -- --all
+  --human-initiator "John Smith <john.smith@example.com>"
 ```
 
 #### Mind PowerShell Newlines
