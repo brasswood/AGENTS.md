@@ -116,6 +116,41 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("41 additions and 0 deletions", result.stderr)
 
+    def test_rejects_41_deleted_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            path = repository / "lines.txt"
+            path.write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+            base = run_test_commit(
+                repository, "--large-change-justification", "Test fixture"
+            )
+            self.assertEqual(base.returncode, 0, base.stderr)
+            path.unlink()
+            subprocess.run(["git", "add", "--update"], cwd=repository, check=True)
+
+            result = run_test_commit(repository)
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("0 additions and 41 deletions", result.stderr)
+
+    def test_amend_counts_the_complete_replacement(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+            base = run_test_commit(
+                repository, "--large-change-justification", "Test fixture"
+            )
+            self.assertEqual(base.returncode, 0, base.stderr)
+
+            result = run_test_commit(repository, "--", "--amend")
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("41 additions and 0 deletions", result.stderr)
+
     def test_records_large_change_justification(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
