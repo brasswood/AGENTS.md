@@ -249,7 +249,8 @@ def run_commit(
     if is_large and large_change_justification is None:
         raise ValueError(
             f"proposed commit has {additions} additions and {deletions} deletions; "
-            f"the limit is {CHANGE_LINE_LIMIT} in either direction"
+            f"the limit is {CHANGE_LINE_LIMIT} in either direction; split it or "
+            "pass --large-change-justification"
         )
     if large_change_justification is not None:
         justification = validate_single_line(
@@ -293,7 +294,10 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
     parser.add_argument("--designer", action="append", default=[], type=parse_identity)
     parser.add_argument("--human-initiator", required=True, type=parse_identity)
-    parser.add_argument("--large-change-justification")
+    parser.add_argument(
+        "--large-change-justification",
+        help="Reason that the documented exception to the line limit applies.",
+    )
     return parser.parse_args(helper_arguments), git_arguments
 
 
