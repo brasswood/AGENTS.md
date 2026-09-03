@@ -1,4 +1,7 @@
 # TODO:
+- Put my own voice in AGENTS.md modifications in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
+- Diagnose why cheaper models are not using the commit helper script altogether
+- Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
 - change "items" to "code units" (almost certainly this was ambiguous)
 - "For this commit, an agent could still rationalize compliance by counting matches_complex_selector and matches_complex_selector_internal as the two main items, with the helper and call sites treated as collateral. But I should not have said the wording explicitly permits two behavioral changes."
     - Make clear that I mean two substantial changes followed by necessary minor collateral changes like call-site refactoring.
