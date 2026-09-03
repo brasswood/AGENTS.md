@@ -42,6 +42,23 @@ def run_with_git_arguments(*arguments: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def run_test_commit(
+    repository: Path, *arguments: str
+) -> subprocess.CompletedProcess[str]:
+    return run_helper(
+        "--subject",
+        "Test line limit",
+        "--message-author",
+        "Codex",
+        "--author",
+        CODEX,
+        "--human-initiator",
+        CODEX,
+        *arguments,
+        cwd=repository,
+    )
+
+
 def create_commit(*arguments: str) -> tuple[subprocess.CompletedProcess[str], str]:
     with tempfile.TemporaryDirectory() as directory:
         repository = Path(directory)
@@ -58,6 +75,20 @@ def create_commit(*arguments: str) -> tuple[subprocess.CompletedProcess[str], st
 
 
 class CommitTests(unittest.TestCase):
+    def test_rejects_41_added_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            base = run_test_commit(repository, "--", "--allow-empty")
+            self.assertEqual(base.returncode, 0, base.stderr)
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+
+            result = run_test_commit(repository)
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("41 additions and 0 deletions", result.stderr)
+
     def test_rejects_co_author_without_designer(self) -> None:
         result = run_helper(
             "--subject",
