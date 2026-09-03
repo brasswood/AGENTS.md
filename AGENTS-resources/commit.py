@@ -15,6 +15,7 @@ from pathlib import Path
 
 SUBJECT_WIDTH = 50
 BODY_WIDTH = 72
+CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
 IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
 MESSAGE_LONG_OPTIONS = {
@@ -156,6 +157,42 @@ def validate_git_arguments(arguments: list[str]) -> None:
                     )
                 if short_option not in CLUSTERABLE_SHORT_OPTIONS:
                     break
+
+
+def count_candidate_changes(amend: bool) -> tuple[int, int]:
+    revision = "HEAD^1" if amend else "HEAD"
+    base_result = subprocess.run(
+        ["git", "rev-parse", "--verify", revision],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if base_result.returncode == 0:
+        base = base_result.stdout.strip()
+    else:
+        empty_tree = subprocess.run(
+            ["git", "hash-object", "-t", "tree", "--stdin"],
+            check=True,
+            capture_output=True,
+            input="",
+            text=True,
+        )
+        base = empty_tree.stdout.strip()
+    diff = subprocess.run(
+        ["git", "diff", "--cached", "--numstat", "--no-renames", base, "--"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    additions = 0
+    deletions = 0
+    for line in diff.stdout.splitlines():
+        added, deleted, _path = line.split("\t", 2)
+        if added != "-":
+            additions += int(added)
+        if deleted != "-":
+            deletions += int(deleted)
+    return additions, deletions
 
 
 def run_commit(message: str, author: Identity, arguments: list[str]) -> int:
