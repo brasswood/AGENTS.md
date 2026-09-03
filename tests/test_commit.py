@@ -116,6 +116,45 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("41 additions and 0 deletions", result.stderr)
 
+    def test_records_large_change_justification(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+
+            result = run_test_commit(
+                repository,
+                "--large-change-justification",
+                "Mechanical generated fixture",
+            )
+            message = subprocess.run(
+                ["git", "show", "-s", "--format=%B"],
+                cwd=repository,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("warning: allowing 41 additions", result.stderr)
+        self.assertIn(
+            "Large commit justification: Mechanical generated fixture\n\n"
+            "Commit message authored by Codex",
+            message,
+        )
+
+    def test_rejects_unnecessary_justification(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            result = run_test_commit(
+                repository, "--large-change-justification", "Not needed"
+            )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("justification is unnecessary", result.stderr)
+
     def test_rejects_co_author_without_designer(self) -> None:
         result = run_helper(
             "--subject",
