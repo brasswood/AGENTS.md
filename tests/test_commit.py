@@ -151,6 +151,46 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("41 additions and 0 deletions", result.stderr)
 
+    def test_merge_amend_uses_the_first_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            base = run_test_commit(repository, "--", "--allow-empty")
+            self.assertEqual(base.returncode, 0, base.stderr)
+            main_branch = subprocess.run(
+                ["git", "branch", "--show-current"], cwd=repository, check=True,
+                capture_output=True, text=True,
+            ).stdout.strip()
+            subprocess.run(
+                ["git", "checkout", "-q", "-b", "side"], cwd=repository, check=True
+            )
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+            side = run_test_commit(
+                repository, "--large-change-justification", "Test fixture"
+            )
+            self.assertEqual(side.returncode, 0, side.stderr)
+            subprocess.run(
+                ["git", "checkout", "-q", main_branch], cwd=repository, check=True
+            )
+            subprocess.run(
+                ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+                 "merge", "--quiet", "--no-ff", "side", "-m", "Merge side"],
+                cwd=repository, check=True,
+            )
+
+            result = run_test_commit(repository, "--", "--amend")
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("41 additions and 0 deletions", result.stderr)
+
+    def test_rejects_commit_content_selection(self) -> None:
+        for arguments in (("--all",), ("-a",), ("--include",), ("--", "file")):
+            with self.subTest(arguments=arguments):
+                result = run_with_git_arguments(*arguments)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("must not", result.stderr)
+
     def test_records_large_change_justification(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
