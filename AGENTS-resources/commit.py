@@ -27,6 +27,16 @@ MESSAGE_LONG_OPTIONS = {
     "squash",
 }
 MESSAGE_SHORT_OPTIONS = {"F", "m", "c", "C"}
+CONTENT_LONG_OPTIONS = {
+    "all",
+    "include",
+    "interactive",
+    "only",
+    "patch",
+    "pathspec-from-file",
+    "pathspec-file-nul",
+}
+CONTENT_SHORT_OPTIONS = {"a", "i", "o", "p"}
 CLUSTERABLE_SHORT_OPTIONS = set("aeinopqsvz")
 
 
@@ -140,23 +150,36 @@ def validate_git_arguments(arguments: list[str]) -> None:
         "--reset-author",
         "--no-reset-author",
     }
-    for argument in arguments:
+    for index, argument in enumerate(arguments):
         if argument == "--":
+            if arguments[index + 1 :]:
+                raise ValueError("extra Git arguments must not include pathspecs")
             return
+        if not argument.startswith("-"):
+            raise ValueError(
+                "extra Git arguments must not include pathspecs or separate values"
+            )
         option = argument.split("=", 1)[0]
         if option in author_options:
             raise ValueError("extra Git arguments must not override the author")
         long_option = option.removeprefix("--").removeprefix("no-")
+        if argument.startswith("--") and long_option in CONTENT_LONG_OPTIONS:
+            raise ValueError("extra Git arguments must not select commit content")
         if argument.startswith("--") and long_option in MESSAGE_LONG_OPTIONS:
             raise ValueError("extra Git arguments must not override the message")
         if argument.startswith("-") and not argument.startswith("--"):
+            selects_content = False
             for short_option in argument[1:]:
                 if short_option in MESSAGE_SHORT_OPTIONS:
                     raise ValueError(
                         "extra Git arguments must not override the message"
                     )
+                if short_option in CONTENT_SHORT_OPTIONS:
+                    selects_content = True
                 if short_option not in CLUSTERABLE_SHORT_OPTIONS:
                     break
+            if selects_content:
+                raise ValueError("extra Git arguments must not select commit content")
 
 
 def count_candidate_changes(amend: bool) -> tuple[int, int]:
