@@ -195,8 +195,39 @@ def count_candidate_changes(amend: bool) -> tuple[int, int]:
     return additions, deletions
 
 
-def run_commit(message: str, author: Identity, arguments: list[str]) -> int:
+def run_commit(
+    message: str,
+    author: Identity,
+    arguments: list[str],
+    large_change_justification: str | None,
+) -> int:
     validate_git_arguments(arguments)
+    amend = False
+    for argument in arguments:
+        if argument == "--":
+            break
+        if argument == "--amend":
+            amend = True
+        elif argument == "--no-amend":
+            amend = False
+    additions, deletions = count_candidate_changes(amend)
+    is_large = additions > CHANGE_LINE_LIMIT or deletions > CHANGE_LINE_LIMIT
+    if not is_large and large_change_justification is not None:
+        raise ValueError("large-change justification is unnecessary")
+    if is_large and large_change_justification is None:
+        raise ValueError(
+            f"proposed commit has {additions} additions and {deletions} deletions; "
+            f"the limit is {CHANGE_LINE_LIMIT} in either direction"
+        )
+    if large_change_justification is not None:
+        justification = validate_single_line(
+            large_change_justification, "large-change justification", BODY_WIDTH
+        )
+        print(
+            f"warning: allowing {additions} additions and {deletions} deletions: "
+            f"{justification}",
+            file=sys.stderr,
+        )
     with tempfile.TemporaryDirectory(prefix="commit-") as directory:
         message_path = Path(directory) / "message"
         message_path.write_text(message, encoding="utf-8", newline="\n")
@@ -228,6 +259,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
     parser.add_argument("--designer", action="append", default=[], type=parse_identity)
     parser.add_argument("--human-initiator", required=True, type=parse_identity)
+    parser.add_argument("--large-change-justification")
     return parser.parse_args(helper_arguments), git_arguments
 
 
@@ -243,7 +275,9 @@ def main() -> int:
             args.designer,
             args.human_initiator,
         )
-        return run_commit(message, args.author, git_arguments)
+        return run_commit(
+            message, args.author, git_arguments, args.large_change_justification
+        )
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
