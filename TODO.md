@@ -3,6 +3,7 @@
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
 - change "items" to "code units" (almost certainly this was ambiguous)
+- I copy/pasted prose from chat into my mach-6-paper AGENTS.md, and that was the majority of the change, yet 5.6 luna medium set the author as me when I just asked it to commit the file (which was mostly copy/pasted). I might need to add instructions to review the changes before committing so that it can tell whether it wrote the thing.
 - "For this commit, an agent could still rationalize compliance by counting matches_complex_selector and matches_complex_selector_internal as the two main items, with the helper and call sites treated as collateral. But I should not have said the wording explicitly permits two behavioral changes."
     - Make clear that I mean two substantial changes followed by necessary minor collateral changes like call-site refactoring.
 - "There is no required commit plan before implementation. Once the final compiling patch exists, making one commit is the easiest interpretation."
