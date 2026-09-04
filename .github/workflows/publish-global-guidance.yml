@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Amp
-        run: npm install --global @sourcegraph/amp
+        run: npm install --global @ampcode/cli
       - name: Publish personal skill
         env:
           AMP_API_KEY: ${{ secrets.AMP_API_KEY }}
