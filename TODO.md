@@ -5,7 +5,7 @@
 - change "items" to "code units" (almost certainly this was ambiguous)
 - I copy/pasted prose from chat into my mach-6-paper AGENTS.md, and that was the majority of the change, yet 5.6 luna medium set the author as me when I just asked it to commit the file (which was mostly copy/pasted). I might need to add instructions to review the changes before committing so that it can tell whether it wrote the thing.
     - Update: I reset the HEAD, told it verbatim, "Whoops, I reset HEAD to the previous commit. Review the changes to AGENTS.md to determine attribution, then commit it," and it worked _flawlessly_, even on luna medium. I will definitely add this to my global instructions now.
-    - The downside is, reviewing every change will burn through tokens. Future work: make a tool that makes this easier, e.g., a review tool which somehow obtains the agents' edits and only shows the edits that the agent didn't make.
+    - The downside is, reviewing every change will burn through tokens. Future work: make a tool that makes this easier, e.g., a review tool which somehow obtains the agents' edits and only shows the edits that the agent didn't obviously make by editing the file directly.
 - "For this commit, an agent could still rationalize compliance by counting matches_complex_selector and matches_complex_selector_internal as the two main items, with the helper and call sites treated as collateral. But I should not have said the wording explicitly permits two behavioral changes."
     - Make clear that I mean two substantial changes followed by necessary minor collateral changes like call-site refactoring.
 - "There is no required commit plan before implementation. Once the final compiling patch exists, making one commit is the easiest interpretation."
