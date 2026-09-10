@@ -473,3 +473,21 @@ class CommitTests(unittest.TestCase):
             f"Designed-by: {USER}\n"
             f"Initiated-by: {USER}\n\n",
         )
+
+    def test_omits_trailers_for_self_authored_change(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test self-authored change",
+            "--author",
+            "agent",
+            "--designer",
+            "agent",
+            "--human-initiator",
+            "agent",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            commit,
+            f"{AGENT}\nTest self-authored change\n\n"
+            f"Commit message authored by {AGENT}\n\n",
