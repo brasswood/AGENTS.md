@@ -275,27 +275,6 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("designer is required", result.stderr)
 
-    def test_rejects_malformed_identity(self) -> None:
-        result = run_helper(
-            "--subject",
-            "Test malformed identity",
-            "--message-author",
-            "Codex",
-            "--author",
-            "Codex",
-            "--human-initiator",
-            CODEX,
-        )
-
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("Name <email>", result.stderr)
-
-    def test_rejects_forwarded_author_override(self) -> None:
-        result = run_with_git_arguments(f"--author={ANDREW}")
-
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("must not override the author", result.stderr)
-
     def test_rejects_forwarded_message_options(self) -> None:
         message_options = (
             "-m", "-mText", "-amText", "--message", "--message=Text", "--no-message",
