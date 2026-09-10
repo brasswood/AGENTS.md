@@ -7,46 +7,57 @@ from pathlib import Path
 
 
 SCRIPT = Path(__file__).parents[1] / "AGENTS-resources" / "commit.py"
-CODEX = "Codex <noreply@openai.com>"
-ANDREW = "Andrew Riachi <andrew.riachi@gmail.com>"
+AGENT = "Agent Name <agent@example.com>"
+USER = "Andrew Riachi <andrew.riachi@gmail.com>"
+DEFAULT_GLOBAL_CONFIG = "[user]\nname = Andrew Riachi\nemail = andrew.riachi@gmail.com\n"
 
 
 def run_helper(
     *arguments: str,
     cwd: Path | None = None,
     environment: dict[str, str | None] | None = None,
+    global_config: str | None = DEFAULT_GLOBAL_CONFIG,
+    global_files: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     env = os.environ | {
         "GIT_COMMITTER_NAME": "Test Committer",
         "GIT_COMMITTER_EMAIL": "committer@example.com",
+        "AGENT_NAME": "Agent Name",
+        "AGENT_EMAIL": "agent@example.com",
     }
     for key in ("AMP_URL", "AMP_THREAD_ID", "AMP_DISABLE_AMP_THREAD_TRAILER"):
         env.pop(key, None)
-    for key, value in (environment or {}).items():
-        if value is None:
-            env.pop(key, None)
-        else:
-            env[key] = value
-    return subprocess.run(
-        [sys.executable, "-B", str(SCRIPT), *arguments],
-        check=False,
-        capture_output=True,
-        cwd=cwd,
-        env=env,
-        text=True,
-    )
+    with tempfile.TemporaryDirectory() as config_directory:
+        global_path = Path(config_directory) / "global.gitconfig"
+        global_path.write_text(global_config or "", encoding="utf-8")
+        for relative_path, contents in (global_files or {}).items():
+            included_path = Path(config_directory) / relative_path
+            included_path.parent.mkdir(parents=True, exist_ok=True)
+            included_path.write_text(contents, encoding="utf-8")
+        env.setdefault("GIT_CONFIG_GLOBAL", str(global_path))
+        for key, value in (environment or {}).items():
+            if value is None:
+                env.pop(key, None)
+            else:
+                env[key] = value
+        return subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), *arguments],
+            check=False,
+            capture_output=True,
+            cwd=cwd,
+            env=env,
+            text=True,
+        )
 
 
 def run_with_git_arguments(*arguments: str) -> subprocess.CompletedProcess[str]:
     return run_helper(
         "--subject",
         "Test forwarded arguments",
-        "--message-author",
-        "Codex",
         "--author",
-        CODEX,
+        "agent",
         "--human-initiator",
-        CODEX,
+        "agent",
         "--",
         *arguments,
     )
