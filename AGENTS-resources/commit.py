@@ -393,18 +393,28 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
 def main() -> int:
     args, git_arguments = parse_args()
     try:
+        selectors = [args.author, *args.co_author, *args.designer, args.human_initiator]
+        agent, user = load_identities(selectors)
+        author = resolve_identity(args.author, agent, user)
+        co_authors = [
+            resolve_identity(selector, agent, user) for selector in args.co_author
+        ]
+        designers = [
+            resolve_identity(selector, agent, user) for selector in args.designer
+        ]
+        human_initiator = resolve_identity(args.human_initiator, agent, user)
         message = format_message(
             args.subject,
             args.body,
             args.large_change_justification,
-            args.message_author,
-            args.author,
-            args.co_author,
-            args.designer,
-            args.human_initiator,
+            agent,
+            author,
+            co_authors,
+            designers,
+            human_initiator,
         )
         return run_commit(
-            message, args.author, git_arguments, args.large_change_justification
+            message, author, git_arguments, args.large_change_justification
         )
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
