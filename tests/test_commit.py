@@ -358,3 +358,26 @@ class CommitTests(unittest.TestCase):
             f"{CODEX}\nTest self-authored change\n\n"
             "Commit message authored by Codex\n\n",
         )
+
+    def test_records_amp_thread_id(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test Amp thread attribution",
+            "--message-author",
+            "Codex",
+            "--author",
+            CODEX,
+            "--human-initiator",
+            CODEX,
+            environment={
+                "AMP_URL": "https://ampcode.com/",
+                "AMP_THREAD_ID": "T-1234",
+            },
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "Commit message authored by Codex\n\n"
+            "Amp-Thread-ID: https://ampcode.com/threads/T-1234\n",
+            commit,
+        )
