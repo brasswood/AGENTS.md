@@ -430,3 +430,30 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertNotIn("Amp-Thread-ID:", commit)
+    def test_rejects_literal_identity_selector(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test malformed selector",
+            "--author",
+            AGENT,
+            "--human-initiator",
+            "agent",
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("invalid choice", result.stderr)
+
+    def test_rejects_message_author_argument(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test removed message author",
+            "--message-author",
+            "Agent Name",
+            "--author",
+            "agent",
+            "--human-initiator",
+            "agent",
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("unrecognized arguments", result.stderr)
