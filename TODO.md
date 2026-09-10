@@ -5,6 +5,10 @@
 - Add Amp orb specific skill to push to Github
 - Figure out in "Commit.py guidance" chat (commit 15ccdec2d7b696a8e52482fe0f31a7078a9b393d) why it used brasswood@github instead of my identity.
 - does the commit helper reject `-- --author`?
+- Should commit helper use `--trailer`?
+- Should commit helper use an injection strategy like the one described in https://ampcode.com/threads/T-01a08cfd-8030-73d8-9383-3300a2392120?
+- Remove character limit on `--large-change-justification`.
+- Amp made a large commit for the test cases (now 66f38d8), which I think may have been unnecessary
 - change "items" to "code units" (almost certainly this was ambiguous)
 - I copy/pasted prose from chat into my mach-6-paper AGENTS.md, and that was the majority of the change, yet 5.6 luna medium set the author as me when I just asked it to commit the file (which was mostly copy/pasted). I might need to add instructions to review the changes before committing so that it can tell whether it wrote the thing.
     - Update: I reset the HEAD, told it verbatim, "Whoops, I reset HEAD to the previous commit. Review the changes to AGENTS.md to determine attribution, then commit it," and it worked _flawlessly_, even on luna medium. I will definitely add this to my global instructions now.
