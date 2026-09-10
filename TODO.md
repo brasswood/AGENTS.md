@@ -1,6 +1,7 @@
 # TODO:
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
+- 5.6 luna high also overrode a 100-line change to `commit.py`. That's a problem. https://ampcode.com/threads/T-01a08d68-1872-719b-9000-39b9cd725a41
 - Get Amp to use "Amp" in commit messages
 - Add Amp orb specific skill to push to Github
 - Figure out in "Commit.py guidance" chat (commit 15ccdec2d7b696a8e52482fe0f31a7078a9b393d) why it used brasswood@github instead of my identity.
