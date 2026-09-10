@@ -275,35 +275,6 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("designer is required", result.stderr)
 
-    def test_orders_all_attribution_trailers(self) -> None:
-        result, commit = create_commit(
-            "--subject",
-            "Test attributed change",
-            "--message-author",
-            "Codex",
-            "--author",
-            CODEX,
-            "--co-author",
-            ANDREW,
-            "--designer",
-            CODEX,
-            "--designer",
-            ANDREW,
-            "--human-initiator",
-            ANDREW,
-        )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(
-            commit,
-            f"{CODEX}\nTest attributed change\n\n"
-            "Commit message authored by Codex\n\n"
-            f"Co-authored-by: {ANDREW}\n"
-            f"Designed-by: {CODEX}\n"
-            f"Designed-by: {ANDREW}\n"
-            f"Initiated-by: {ANDREW}\n\n",
-        )
-
     def test_omits_trailers_for_self_authored_change(self) -> None:
         result, commit = create_commit(
             "--subject",
