@@ -358,12 +358,31 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
     parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
     parser.add_argument(
-        "--message-author", required=True, help="Agent name for the message sign-off."
+        "--author",
+        required=True,
+        choices=IDENTITY_SELECTORS,
+        help="Identity that authored the change: agent or user.",
     )
-    parser.add_argument("--author", required=True, type=parse_identity)
-    parser.add_argument("--co-author", action="append", default=[], type=parse_identity)
-    parser.add_argument("--designer", action="append", default=[], type=parse_identity)
-    parser.add_argument("--human-initiator", required=True, type=parse_identity)
+    parser.add_argument(
+        "--co-author",
+        action="append",
+        default=[],
+        choices=IDENTITY_SELECTORS,
+        help="Identity that co-authored the change: agent or user.",
+    )
+    parser.add_argument(
+        "--designer",
+        action="append",
+        default=[],
+        choices=IDENTITY_SELECTORS,
+        help="Identity that designed the change: agent or user.",
+    )
+    parser.add_argument(
+        "--human-initiator",
+        required=True,
+        choices=IDENTITY_SELECTORS,
+        help="Identity that initiated the change: agent or user.",
+    )
     parser.add_argument(
         "--large-change-justification",
         help="Reason that the documented exception to the line limit applies.",
