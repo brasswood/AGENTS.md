@@ -516,3 +516,24 @@ class CommitTests(unittest.TestCase):
                 cwd=repository,
                 global_config="",
             )
+    def test_uses_included_global_user_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "file.txt").write_text("content\n", encoding="utf-8")
+            subprocess.run(["git", "add", "file.txt"], cwd=repository, check=True)
+            result = run_helper(
+                "--subject",
+                "Test included global identity",
+                "--author",
+                "user",
+                "--human-initiator",
+                "user",
+                "--",
+                "--dry-run",
+                cwd=repository,
+                global_config="[include]\npath = included.gitconfig\n",
+                global_files={"included.gitconfig": DEFAULT_GLOBAL_CONFIG},
+            )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
