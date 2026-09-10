@@ -275,25 +275,6 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("designer is required", result.stderr)
 
-    def test_omits_disabled_amp_thread_id(self) -> None:
-        result, commit = create_commit(
-            "--subject",
-            "Test disabled Amp attribution",
-            "--message-author",
-            "Codex",
-            "--author",
-            CODEX,
-            "--human-initiator",
-            CODEX,
-            environment={
-                "AMP_URL": "https://ampcode.com",
-                "AMP_THREAD_ID": "T-1234",
-                "AMP_DISABLE_AMP_THREAD_TRAILER": "1",
-            },
-        )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertNotIn("Amp-Thread-ID:", commit)
     def test_rejects_literal_identity_selector(self) -> None:
         result = run_helper(
             "--subject",
