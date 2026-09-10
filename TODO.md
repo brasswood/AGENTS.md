@@ -2,6 +2,7 @@
 - Put my own voice in AGENTS.md modifications in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
+- Get Amp to use "Amp" in commit messages
 - change "items" to "code units" (almost certainly this was ambiguous)
 - I copy/pasted prose from chat into my mach-6-paper AGENTS.md, and that was the majority of the change, yet 5.6 luna medium set the author as me when I just asked it to commit the file (which was mostly copy/pasted). I might need to add instructions to review the changes before committing so that it can tell whether it wrote the thing.
     - Update: I reset the HEAD, told it verbatim, "Whoops, I reset HEAD to the previous commit. Review the changes to AGENTS.md to determine attribution, then commit it," and it worked _flawlessly_, even on luna medium. I will definitely add this to my global instructions now.
