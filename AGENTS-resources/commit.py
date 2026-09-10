@@ -20,6 +20,9 @@ CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
 AMP_THREAD_TRAILER = "Amp-Thread-ID: "
 LARGE_CHANGE_PREFIX = "Large commit justification: "
+AGENT_NAME_ENV = "AGENT_NAME"
+AGENT_EMAIL_ENV = "AGENT_EMAIL"
+IDENTITY_SELECTORS = ("agent", "user")
 IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
 MESSAGE_LONG_OPTIONS = {
     "file",
@@ -54,7 +57,7 @@ class Identity:
 
 def parse_identity(value: str) -> Identity:
     match = IDENTITY_PATTERN.fullmatch(value)
-    if match is None or value != value.strip():
+    if match is None or value != value.strip() or "\n" in value or "\r" in value:
         raise argparse.ArgumentTypeError("identity must use the format 'Name <email>'")
     name = match.group("name")
     if name != name.strip():
@@ -62,6 +65,17 @@ def parse_identity(value: str) -> Identity:
             "identity name must not have surrounding spaces"
         )
     return Identity(name, match.group("email"))
+
+
+def identity_from_parts(name: str | None, email: str | None, source: str) -> Identity:
+    if name is None:
+        raise ValueError(f"{source} name is not configured")
+    if email is None:
+        raise ValueError(f"{source} email is not configured")
+    try:
+        return parse_identity(f"{name} <{email}>")
+    except argparse.ArgumentTypeError as error:
+        raise ValueError(f"{source} identity is invalid: {error}") from error
 
 
 def format_attribution_trailers(
