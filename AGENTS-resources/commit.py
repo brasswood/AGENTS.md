@@ -109,6 +109,16 @@ def load_identities(selectors: list[str]) -> tuple[Identity, Identity | None]:
     return agent, user
 
 
+def resolve_identity(
+    selector: str, agent: Identity, user: Identity | None
+) -> Identity:
+    if selector == "agent":
+        return agent
+    if selector == "user" and user is not None:
+        return user
+    raise ValueError(f"identity selector must be one of: {', '.join(IDENTITY_SELECTORS)}")
+
+
 def format_attribution_trailers(
     author: Identity,
     co_authors: list[Identity],
@@ -180,15 +190,15 @@ def format_message(
     subject: str,
     body: str | None,
     large_change_justification: str | None,
-    message_author: str,
+    message_author: Identity,
     author: Identity,
     co_authors: list[Identity],
     designers: list[Identity],
     human_initiator: Identity,
 ) -> str:
     subject = validate_single_line(subject, "subject", SUBJECT_WIDTH)
-    message_author = validate_single_line(
-        message_author, "message author", BODY_WIDTH - len(AUTHOR_PREFIX)
+    message_author_text = validate_single_line(
+        str(message_author), "message author", BODY_WIDTH - len(AUTHOR_PREFIX)
     )
     parts = [subject]
     if body and body.strip():
@@ -200,7 +210,7 @@ def format_message(
             BODY_WIDTH - len(LARGE_CHANGE_PREFIX),
         )
         parts.extend(("", f"{LARGE_CHANGE_PREFIX}{justification}"))
-    parts.extend(("", f"{AUTHOR_PREFIX}{message_author}"))
+    parts.extend(("", f"{AUTHOR_PREFIX}{message_author_text}"))
     trailers = format_attribution_trailers(
         author, co_authors, designers, human_initiator
     )
