@@ -2,7 +2,6 @@
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
 - Get Amp to use "Amp" in commit messages
-- Get Amp-Thread-Id trailer when using Amp
 - Add Amp orb specific skill to push to Github
 - Figure out in "Commit.py guidance" chat (commit 15ccdec2d7b696a8e52482fe0f31a7078a9b393d) why it used brasswood@github instead of my identity.
 - does the commit helper reject `-- --author`?
@@ -27,4 +26,3 @@
 - "Junior SWE two minutes" is probably too subjective
 - commit messages are not doing a great job of explaining what is being done and why. Example: `5bb46af`.
     - could say that the message must ultimately convey what is being done, where in the code/what structures the thing is being done to, and why.
-

@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -17,6 +18,7 @@ SUBJECT_WIDTH = 50
 BODY_WIDTH = 72
 CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
+AMP_THREAD_TRAILER = "Amp-Thread-ID: "
 LARGE_CHANGE_PREFIX = "Large commit justification: "
 IDENTITY_PATTERN = re.compile(r"(?P<name>[^<>]+?) <(?P<email>[^<>\s]+@[^<>\s]+)>")
 MESSAGE_LONG_OPTIONS = {
@@ -88,6 +90,16 @@ def format_attribution_trailers(
     return trailers
 
 
+def format_amp_thread_trailer() -> str | None:
+    if os.environ.get("AMP_DISABLE_AMP_THREAD_TRAILER"):
+        return None
+    amp_url = os.environ.get("AMP_URL")
+    thread_id = os.environ.get("AMP_THREAD_ID")
+    if not amp_url or not thread_id:
+        return None
+    return f"{AMP_THREAD_TRAILER}{amp_url.rstrip('/')}/threads/{thread_id}"
+
+
 def validate_single_line(value: str, name: str, width: int) -> str:
     if "\n" in value or "\r" in value:
         raise ValueError(f"{name} must be one line")
@@ -149,6 +161,9 @@ def format_message(
     )
     if trailers:
         parts.extend(("", *trailers))
+    amp_thread_trailer = format_amp_thread_trailer()
+    if amp_thread_trailer is not None:
+        parts.extend(("", amp_thread_trailer))
     return "\n".join(parts) + "\n"
 
 
