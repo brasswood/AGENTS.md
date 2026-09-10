@@ -425,3 +425,24 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("must not override the author", result.stderr)
+
+    def test_rejects_forwarded_message_options(self) -> None:
+        message_options = (
+            "-m", "-mText", "-amText", "--message", "--message=Text", "--no-message",
+            "-F", "-Ffile", "-aFfile", "--file", "--file=file", "--no-file",
+            "-c", "-cHEAD", "-acHEAD", "--reedit-message", "--no-reedit-message",
+            "-C", "-CHEAD", "-aCHEAD", "--reuse-message", "--no-reuse-message",
+            "--fixup", "--fixup=HEAD", "--no-fixup",
+            "--squash", "--squash=HEAD", "--no-squash",
+        )
+
+        for option in message_options:
+            with self.subTest(option=option):
+                result = run_with_git_arguments(option)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("must not override the message", result.stderr)
+
+    def test_allows_message_text_outside_option_names(self) -> None:
+        for arguments in (("--", "--message"), ("-Smycommit",)):
+            with self.subTest(arguments=arguments):
+                result = run_with_git_arguments("--dry-run", *arguments)
