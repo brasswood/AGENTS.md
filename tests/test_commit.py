@@ -262,14 +262,12 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test missing designer",
-            "--message-author",
-            "Codex",
             "--author",
-            CODEX,
+            "agent",
             "--co-author",
-            ANDREW,
+            "user",
             "--human-initiator",
-            ANDREW,
+            "user",
         )
 
         self.assertEqual(result.returncode, 2)
