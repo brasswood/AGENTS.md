@@ -20,6 +20,35 @@ Do not move a section of code into a new module and implement a new feature in t
 
 Do not run the formatter on code you didn't touch in a commit. This introduces noise not related to the change. If you want to format just your changes, use `rustfmt --file-lines` if working with Rust code. Note that `cargo fmt` does not support formatting specific lines or files.
 
+### Create Commits with `commit.py`
+
+Prefer the bundled `commit.py` helper for creating commits. Stage the exact
+contents first, then invoke it with:
+
+```powershell
+python commit.py `
+  --subject "..." `
+  --body "..." `
+  --message-author Codex `
+  --author "Codex <noreply@example.com>" `
+  --human-initiator "Name <email@example.com>"
+```
+
+The helper accepts:
+
+- `--subject` (also `--first-line`)
+- `--body`
+- `--message-author`
+- `--author`
+- repeatable `--co-author`
+- repeatable `--designer`
+- `--human-initiator`
+- `--large-change-justification`
+- additional Git options after `--`
+
+The following sections explain message formatting, attribution, and when the
+large-change exception is appropriate.
+
 ### Follow Commit Message Authoring Guidance
 When you author a git commit message, follow the 50/72 rule:
 
