@@ -300,6 +300,7 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("unrecognized arguments", result.stderr)
+
     def test_requires_agent_environment(self) -> None:
         for variable in ("AGENT_NAME", "AGENT_EMAIL"):
             with self.subTest(variable=variable):
@@ -327,6 +328,10 @@ class CommitTests(unittest.TestCase):
             "agent",
             environment={"AGENT_EMAIL": "not-an-email"},
         )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("agent identity is invalid", result.stderr)
+
     def test_requires_global_user_identity(self) -> None:
         result = run_helper(
             "--subject",
@@ -359,6 +364,9 @@ class CommitTests(unittest.TestCase):
                 cwd=repository,
                 global_config="",
             )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_uses_included_global_user_identity(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
@@ -380,6 +388,7 @@ class CommitTests(unittest.TestCase):
             )
 
         self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_uses_user_selector_for_git_author(self) -> None:
         result, commit = create_commit(
             "--subject",
