@@ -537,3 +537,30 @@ class CommitTests(unittest.TestCase):
             )
 
         self.assertEqual(result.returncode, 0, result.stderr)
+    def test_uses_user_selector_for_git_author(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test user-selected author",
+            "--author",
+            "user",
+            "--human-initiator",
+            "user",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(commit.startswith(f"{USER}\n"), commit)
+        self.assertIn(f"Commit message authored by {AGENT}", commit)
+
+    def test_rejects_overlong_agent_message_identity(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test overlong message identity",
+            "--author",
+            "agent",
+            "--human-initiator",
+            "agent",
+            environment={
+                "AGENT_NAME": "An agent name that is deliberately very long",
+                "AGENT_EMAIL": "agent@example.com",
+            },
+        )
