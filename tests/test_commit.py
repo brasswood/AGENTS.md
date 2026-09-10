@@ -416,3 +416,12 @@ class CommitTests(unittest.TestCase):
                 "AGENT_EMAIL": "agent@example.com",
             },
         )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("message author must be at most", result.stderr)
+
+    def test_rejects_forwarded_author_override(self) -> None:
+        result = run_with_git_arguments(f"--author={USER}")
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("must not override the author", result.stderr)
