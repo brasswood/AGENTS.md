@@ -184,6 +184,20 @@ Example message with message attribution and trailers:
 author, validates identities and role combinations, and appends the required
 trailers in the supplied order.
 
+For example:
+
+```powershell
+python commit.py `
+  --subject "Add selector cache to matching" `
+  --body "Add a selector cache to matching. This speeds up..." `
+  --message-author Codex `
+  --author "Codex <noreply@openai.com>" `
+  --co-author "John Smith <john.smith@example.com>" `
+  --designer "Codex <noreply@openai.com>" `
+  --designer "John Smith <john.smith@example.com>" `
+  --human-initiator "John Smith <john.smith@example.com>"
+```
+
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
 
