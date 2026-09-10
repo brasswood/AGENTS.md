@@ -179,19 +179,10 @@ Example message with message attribution and trailers:
 > Designed-by: John Smith <john.smith@example.com>
 > Initiated-by: John Smith <john.smith@example.com>
 
-Prefer to use the same bundled `commit.py` to add the trailers. Example:
-
-```powershell
-python commit.py `
-  --subject "Add selector cache to matching" `
-  --body "Add a selector cache to matching. This speeds up..." `
-  --message-author Codex `
-  --author "Codex <noreply@openai.com>" `
-  --co-author "John Smith <john.smith@example.com>" `
-  --designer "Codex <noreply@openai.com>" `
-  --designer "John Smith <john.smith@example.com>" `
-  --human-initiator "John Smith <john.smith@example.com>"
-```
+`commit.py` constructs this attribution from `--author`, repeatable
+`--co-author` and `--designer` options, and `--human-initiator`. It sets the Git
+author, validates identities and role combinations, and appends the required
+trailers in the supplied order.
 
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
