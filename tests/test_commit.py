@@ -69,12 +69,10 @@ def run_test_commit(
     return run_helper(
         "--subject",
         "Test line limit",
-        "--message-author",
-        "Codex",
         "--author",
-        CODEX,
+        "agent",
         "--human-initiator",
-        CODEX,
+        "agent",
         *arguments,
         cwd=repository,
     )
@@ -245,7 +243,7 @@ class CommitTests(unittest.TestCase):
         self.assertIn("warning: allowing 41 additions", result.stderr)
         self.assertIn(
             "Large commit justification: Mechanical generated fixture\n\n"
-            "Commit message authored by Codex",
+            f"Commit message authored by {AGENT}",
             message,
         )
 
