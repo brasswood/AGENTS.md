@@ -484,3 +484,35 @@ class CommitTests(unittest.TestCase):
             "agent",
             environment={"AGENT_EMAIL": "not-an-email"},
         )
+    def test_requires_global_user_identity(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test missing global identity",
+            "--author",
+            "user",
+            "--human-initiator",
+            "user",
+            global_config="[user]\nemail = andrew.riachi@gmail.com\n",
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("global Git setting user.name is not configured", result.stderr)
+
+    def test_agent_only_roles_do_not_require_global_user_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "file.txt").write_text("content\n", encoding="utf-8")
+            subprocess.run(["git", "add", "file.txt"], cwd=repository, check=True)
+            result = run_helper(
+                "--subject",
+                "Test agent-only identity",
+                "--author",
+                "agent",
+                "--human-initiator",
+                "agent",
+                "--",
+                "--dry-run",
+                cwd=repository,
+                global_config="",
+            )
