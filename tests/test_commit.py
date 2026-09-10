@@ -457,3 +457,30 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("unrecognized arguments", result.stderr)
+    def test_requires_agent_environment(self) -> None:
+        for variable in ("AGENT_NAME", "AGENT_EMAIL"):
+            with self.subTest(variable=variable):
+                result = run_helper(
+                    "--subject",
+                    "Test missing agent setting",
+                    "--author",
+                    "agent",
+                    "--human-initiator",
+                    "agent",
+                    environment={variable: None},
+                )
+
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("agent", result.stderr)
+                self.assertIn("not configured", result.stderr)
+
+    def test_rejects_malformed_agent_environment(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test malformed agent setting",
+            "--author",
+            "agent",
+            "--human-initiator",
+            "agent",
+            environment={"AGENT_EMAIL": "not-an-email"},
+        )
