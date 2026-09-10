@@ -446,3 +446,30 @@ class CommitTests(unittest.TestCase):
         for arguments in (("--", "--message"), ("-Smycommit",)):
             with self.subTest(arguments=arguments):
                 result = run_with_git_arguments("--dry-run", *arguments)
+
+    def test_orders_all_attribution_trailers(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test attributed change",
+            "--author",
+            "agent",
+            "--co-author",
+            "user",
+            "--designer",
+            "agent",
+            "--designer",
+            "user",
+            "--human-initiator",
+            "user",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            commit,
+            f"{AGENT}\nTest attributed change\n\n"
+            f"Commit message authored by {AGENT}\n\n"
+            f"Co-authored-by: {USER}\n"
+            f"Designed-by: {AGENT}\n"
+            f"Designed-by: {USER}\n"
+            f"Initiated-by: {USER}\n\n",
+        )
