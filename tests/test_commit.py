@@ -512,3 +512,21 @@ class CommitTests(unittest.TestCase):
             "Amp-Thread-ID: https://ampcode.com/threads/T-1234\n",
             commit,
         )
+
+    def test_omits_amp_thread_id_without_environment(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test missing Amp environment",
+            "--author",
+            "agent",
+            "--human-initiator",
+            "agent",
+            environment={
+                "AMP_URL": None,
+                "AMP_THREAD_ID": None,
+                "AMP_DISABLE_AMP_THREAD_TRAILER": None,
+            },
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("Amp-Thread-ID:", commit)
