@@ -446,6 +446,7 @@ class CommitTests(unittest.TestCase):
         for arguments in (("--", "--message"), ("-Smycommit",)):
             with self.subTest(arguments=arguments):
                 result = run_with_git_arguments("--dry-run", *arguments)
+                self.assertNotIn("must not override the message", result.stderr)
 
     def test_orders_all_attribution_trailers(self) -> None:
         result, commit = create_commit(
@@ -491,6 +492,7 @@ class CommitTests(unittest.TestCase):
             commit,
             f"{AGENT}\nTest self-authored change\n\n"
             f"Commit message authored by {AGENT}\n\n",
+        )
 
     def test_records_amp_thread_id(self) -> None:
         result, commit = create_commit(
