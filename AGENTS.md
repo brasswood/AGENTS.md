@@ -22,8 +22,12 @@ Do not run the formatter on code you didn't touch in a commit. This introduces n
 
 ### Create Commits with `commit.py`
 
-Prefer the bundled `commit.py` helper for creating commits. Stage the exact
-contents first, then invoke it with:
+Prefer the bundled `commit.py` helper for creating commits. When loaded from
+the `global-guidance` skill, resolve `scripts/commit.py` relative to the skill
+directory. Otherwise, use
+`<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`.
+
+Stage the exact contents first, then invoke the helper with:
 
 ```powershell
 python commit.py `
@@ -46,8 +50,19 @@ The helper accepts:
 - `--large-change-justification`
 - additional Git options after `--`
 
-The following sections explain message formatting, attribution, and when the
-large-change exception is appropriate.
+The helper rejects content-selection arguments such as `--all` and pathspecs
+so that it can check the staged index. It refuses a commit with more than 40
+additions or deletions. If that numerical check exceeds the limit but this
+guidance still permits the commit, pass `--large-change-justification` with a
+concise reason. The helper records that reason in the commit message. Do not
+use the override merely because a larger change has already been written.
+
+Arguments after `--` are forwarded to `git commit`. Do not forward content
+selection, author, or message-source options; the helper supplies or validates
+those concerns. For `--amend`, the helper measures the complete replacement
+commit against its first parent.
+
+The following sections explain message formatting and attribution.
 
 ### Follow Commit Message Authoring Guidance
 When you author a git commit message, follow the 50/72 rule:
@@ -64,34 +79,9 @@ Every commit message you author must have a blank line after the body (or subjec
 >
 > Commit message authored by <AGENT>
 
-Prefer to use the `commit.py` bundled with these instructions to create the
-commit. When loaded from the `global-guidance` skill, resolve
-`scripts/commit.py` relative to the skill directory. Otherwise,
-use `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`. Example:
-
-```powershell
-python commit.py `
-  --subject "Add selector cache to matching" `
-  --body "Add a selector cache to matching. This speeds up..." `
-  --message-author Codex `
-  --author "Codex <noreply@openai.com>" `
-  --human-initiator "John Smith <john.smith@example.com>"
-```
-
-This validates the subject length, wraps the body, appends the signature,
-verifies attribution (discussed later), then runs `git commit`. Stage the exact
-commit contents before invoking it. The helper rejects content-selection
-arguments such as `--all` and pathspecs so that it can check the staged index.
-It refuses a commit with more than 40 additions or deletions. If that numerical
-check exceeds the limit but this guidance still permits the commit, pass
-`--large-change-justification` with a concise reason. The helper records that
-reason in the commit message. Do not use the override merely because a larger
-change has already been written.
-
-Arguments after `--` are forwarded to `git commit`. Do not forward content
-selection, author, or message-source options; the helper supplies or validates
-those concerns. For `--amend`, the helper measures the complete replacement
-commit against its first parent.
+`commit.py` constructs this format from `--subject` and `--body`. It validates
+the subject length, wraps the body, and appends the signature supplied by
+`--message-author`.
 
 Commit messages must, at minimum, convey:
 
