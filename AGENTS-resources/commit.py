@@ -78,6 +78,37 @@ def identity_from_parts(name: str | None, email: str | None, source: str) -> Ide
         raise ValueError(f"{source} identity is invalid: {error}") from error
 
 
+def read_global_git_value(key: str) -> str:
+    result = subprocess.run(
+        ["git", "config", "--global", "--includes", "--get", key],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        if result.returncode == 1 and not result.stderr.strip():
+            raise ValueError(f"global Git setting {key} is not configured")
+        detail = result.stderr.strip() or f"git config exited with {result.returncode}"
+        raise ValueError(f"could not read global Git setting {key}: {detail}")
+    return result.stdout.removesuffix("\n").removesuffix("\r")
+
+
+def load_identities(selectors: list[str]) -> tuple[Identity, Identity | None]:
+    agent = identity_from_parts(
+        os.environ.get(AGENT_NAME_ENV),
+        os.environ.get(AGENT_EMAIL_ENV),
+        "agent",
+    )
+    if "user" not in selectors:
+        return agent, None
+    user = identity_from_parts(
+        read_global_git_value("user.name"),
+        read_global_git_value("user.email"),
+        "user",
+    )
+    return agent, user
+
+
 def format_attribution_trailers(
     author: Identity,
     co_authors: list[Identity],
