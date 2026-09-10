@@ -1,5 +1,4 @@
 # TODO:
-- Put my own voice in AGENTS.md modifications in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
 - Get Amp to use "Amp" in commit messages
@@ -21,6 +20,8 @@
 - give concrete examples
 
 ## Done
+- Put my own voice in AGENTS.md modifications in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
+    - Just let Amp write it. Did the reorganization, though.
 - give more concrete tripwires (e.g. after more than 40 insertions OR 40 deletions)
 - "One comprehensible thing" is definitely too subjective
 - "Junior SWE two minutes" is probably too subjective
