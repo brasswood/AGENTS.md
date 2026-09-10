@@ -12,17 +12,27 @@ ANDREW = "Andrew Riachi <andrew.riachi@gmail.com>"
 
 
 def run_helper(
-    *arguments: str, cwd: Path | None = None
+    *arguments: str,
+    cwd: Path | None = None,
+    environment: dict[str, str | None] | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    env = os.environ | {
+        "GIT_COMMITTER_NAME": "Test Committer",
+        "GIT_COMMITTER_EMAIL": "committer@example.com",
+    }
+    for key in ("AMP_URL", "AMP_THREAD_ID", "AMP_DISABLE_AMP_THREAD_TRAILER"):
+        env.pop(key, None)
+    for key, value in (environment or {}).items():
+        if value is None:
+            env.pop(key, None)
+        else:
+            env[key] = value
     return subprocess.run(
         [sys.executable, "-B", str(SCRIPT), *arguments],
         check=False,
         capture_output=True,
         cwd=cwd,
-        env=os.environ | {
-            "GIT_COMMITTER_NAME": "Test Committer",
-            "GIT_COMMITTER_EMAIL": "committer@example.com",
-        },
+        env=env,
         text=True,
     )
 
@@ -59,11 +69,20 @@ def run_test_commit(
     )
 
 
-def create_commit(*arguments: str) -> tuple[subprocess.CompletedProcess[str], str]:
+def create_commit(
+    *arguments: str,
+    environment: dict[str, str | None] | None = None,
+) -> tuple[subprocess.CompletedProcess[str], str]:
     with tempfile.TemporaryDirectory() as directory:
         repository = Path(directory)
         subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
-        result = run_helper(*arguments, "--", "--allow-empty", cwd=repository)
+        result = run_helper(
+            *arguments,
+            "--",
+            "--allow-empty",
+            cwd=repository,
+            environment=environment,
+        )
         commit = subprocess.run(
             ["git", "show", "-s", "--format=%an <%ae>%n%B"],
             cwd=repository,
