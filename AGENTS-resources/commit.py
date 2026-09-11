@@ -67,15 +67,23 @@ def parse_identity(value: str) -> Identity:
     return Identity(name, match.group("email"))
 
 
-def identity_from_parts(name: str | None, email: str | None, source: str) -> Identity:
+def identity_from_parts(
+    name: str | None,
+    email: str | None,
+    source: str,
+    errors: list[str],
+) -> Identity | None:
     if name is None:
-        raise ValueError(f"{source} name is not configured")
+        errors.append(f"{source} name is not configured")
     if email is None:
-        raise ValueError(f"{source} email is not configured")
+        errors.append(f"{source} email is not configured")
+    if name is None or email is None:
+        return None
     try:
         return parse_identity(f"{name} <{email}>")
     except argparse.ArgumentTypeError as error:
-        raise ValueError(f"{source} identity is invalid: {error}") from error
+        errors.append(f"{source} identity is invalid: {error}")
+        return None
 
 
 def read_global_git_value(key: str) -> str:
@@ -94,18 +102,32 @@ def read_global_git_value(key: str) -> str:
 
 
 def load_identities(selectors: list[str]) -> tuple[Identity, Identity | None]:
+    errors: list[str] = []
     agent = identity_from_parts(
         os.environ.get(AGENT_NAME_ENV),
         os.environ.get(AGENT_EMAIL_ENV),
         "agent",
+        errors,
     )
-    if "user" not in selectors:
-        return agent, None
-    user = identity_from_parts(
-        read_global_git_value("user.name"),
-        read_global_git_value("user.email"),
-        "user",
-    )
+    user: Identity | None = None
+    if "user" in selectors:
+        user_name: str | None = None
+        user_email: str | None = None
+        for key, destination in (("user.name", "name"), ("user.email", "email")):
+            try:
+                value = read_global_git_value(key)
+            except ValueError as error:
+                errors.append(str(error))
+            else:
+                if destination == "name":
+                    user_name = value
+                else:
+                    user_email = value
+        if user_name is not None and user_email is not None:
+            user = identity_from_parts(user_name, user_email, "user", errors)
+    if errors:
+        raise ValueError("\n".join(errors))
+    assert agent is not None
     return agent, user
 
 
