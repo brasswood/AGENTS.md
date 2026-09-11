@@ -52,14 +52,6 @@ The helper accepts:
 
 The helper reads the agent's Git identity from the environment variables `AGENT_NAME` and `AGENT_EMAIL`. It reads the user's identity from global Git configuration (`user.name` and `user.email`). Do not set any of these values yourself. If the helper fails because some of them are not set, ask the user to set them.
 
-The role options select between the configured agent and user identities;
-they do not accept literal `Name <email>` values. The message sign-off always
-uses the full selected identity: `Commit message authored by NAME <EMAIL>`.
-`--message-author` is required. If either agent environment variable is
-missing or malformed, the helper fails and asks for that configuration to be
-fixed. If any role selects `user`, both global Git user settings must also be
-configured and valid.
-
 The helper rejects content-selection arguments such as `--all` and pathspecs
 so that it can check the staged index. It refuses a commit with more than 40
 additions or deletions. If that numerical check exceeds the limit but this
