@@ -1,5 +1,6 @@
 # TODO:
-- Don't imply agents should set the environment variables.
+- Inverted pyramid/Progressive elaboration: generally fix up the AI writing to do that.
+    - https://chatgpt.com/share/6aa45d89-d684-83e8-99f3-825f2e38ac87
 - Clean up "selectors" terminology with a fresh thread
 - Clean up "`--message-author` is required" with a fresh thread.
 - Change "using the identity selected by `--message-author`" to something else that doesn't assume the `commit.py` script works.
@@ -32,6 +33,7 @@
 - give concrete examples
 
 ## Done
+- Don't imply agents should set the environment variables.
 - Add `--message-author` back in some form
 - Fix git identity stuck as "Andrew" instead of "Andrew Riachi"
 - ~~Put my own voice in AGENTS.md modifications~~ in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section

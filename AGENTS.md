@@ -27,10 +27,7 @@ the `global-guidance` skill, resolve `scripts/commit.py` relative to the skill
 directory. Otherwise, use
 `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`.
 
-The agent's harness must set `AGENT_NAME` and `AGENT_EMAIL` to the agent's
-Git identity before invoking the helper. The helper reads the user's identity
-from global Git configuration (`user.name` and `user.email`). Stage the exact
-contents first, then invoke the helper with:
+Stage the exact contents first, then invoke the helper with:
 
 ```powershell
 python commit.py `
@@ -52,6 +49,8 @@ The helper accepts:
 - `--human-initiator agent|user`
 - `--large-change-justification`
 - additional Git options after `--`
+
+The helper reads the agent's Git identity from the environment variables `AGENT_NAME` and `AGENT_EMAIL`. It reads the user's identity from global Git configuration (`user.name` and `user.email`). Do not set any of these values yourself. If the helper fails because some of them are not set, ask the user to set them.
 
 The role options select between the configured agent and user identities;
 they do not accept literal `Name <email>` values. The message sign-off always
