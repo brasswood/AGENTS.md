@@ -54,6 +54,8 @@ def run_with_git_arguments(*arguments: str) -> subprocess.CompletedProcess[str]:
     return run_helper(
         "--subject",
         "Test forwarded arguments",
+        "--message-author",
+        "agent",
         "--author",
         "agent",
         "--human-initiator",
@@ -69,6 +71,8 @@ def run_test_commit(
     return run_helper(
         "--subject",
         "Test line limit",
+        "--message-author",
+        "agent",
         "--author",
         "agent",
         "--human-initiator",
@@ -81,12 +85,15 @@ def run_test_commit(
 def create_commit(
     *arguments: str,
     environment: dict[str, str | None] | None = None,
+    message_author: str = "agent",
 ) -> tuple[subprocess.CompletedProcess[str], str]:
     with tempfile.TemporaryDirectory() as directory:
         repository = Path(directory)
         subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
         result = run_helper(
             *arguments,
+            "--message-author",
+            message_author,
             "--",
             "--allow-empty",
             cwd=repository,
@@ -262,6 +269,8 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test missing designer",
+            "--message-author",
+            "agent",
             "--author",
             "agent",
             "--co-author",
@@ -277,8 +286,10 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test malformed selector",
-            "--author",
+            "--message-author",
             AGENT,
+            "--author",
+            "agent",
             "--human-initiator",
             "agent",
         )
@@ -299,7 +310,7 @@ class CommitTests(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 2)
-        self.assertIn("unrecognized arguments", result.stderr)
+        self.assertIn("invalid choice", result.stderr)
 
     def test_requires_agent_environment(self) -> None:
         for variable in ("AGENT_NAME", "AGENT_EMAIL"):
@@ -307,6 +318,8 @@ class CommitTests(unittest.TestCase):
                 result = run_helper(
                     "--subject",
                     "Test missing agent setting",
+                    "--message-author",
+                    "agent",
                     "--author",
                     "agent",
                     "--human-initiator",
@@ -322,6 +335,8 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test malformed agent setting",
+            "--message-author",
+            "agent",
             "--author",
             "agent",
             "--human-initiator",
@@ -336,6 +351,8 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test missing global identity",
+            "--message-author",
+            "user",
             "--author",
             "user",
             "--human-initiator",
@@ -355,6 +372,8 @@ class CommitTests(unittest.TestCase):
             result = run_helper(
                 "--subject",
                 "Test agent-only identity",
+                "--message-author",
+                "agent",
                 "--author",
                 "agent",
                 "--human-initiator",
@@ -376,6 +395,8 @@ class CommitTests(unittest.TestCase):
             result = run_helper(
                 "--subject",
                 "Test included global identity",
+                "--message-author",
+                "user",
                 "--author",
                 "user",
                 "--human-initiator",
@@ -407,6 +428,8 @@ class CommitTests(unittest.TestCase):
         result = run_helper(
             "--subject",
             "Test overlong message identity",
+            "--message-author",
+            "agent",
             "--author",
             "agent",
             "--human-initiator",
