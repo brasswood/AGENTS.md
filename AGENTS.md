@@ -64,7 +64,7 @@ selection, author, or message-source options; the helper supplies or validates
 those concerns. For `--amend`, the helper measures the complete replacement
 commit against its first parent.
 
-The following sections explain message formatting and attribution.
+The following sections explain message formatting and attribution. Much of this, but not all of it, is handled by the helper.
 
 ### Follow Commit Message Authoring Guidance
 When you author a git commit message, follow the 50/72 rule:
