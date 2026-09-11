@@ -36,6 +36,7 @@ contents first, then invoke the helper with:
 python commit.py `
   --subject "..." `
   --body "..." `
+  --message-author agent `
   --author agent `
   --human-initiator user
 ```
@@ -44,6 +45,7 @@ The helper accepts:
 
 - `--subject` (also `--first-line`)
 - `--body`
+- `--message-author agent|user`
 - `--author agent|user`
 - repeatable `--co-author agent|user`
 - repeatable `--designer agent|user`
@@ -53,10 +55,11 @@ The helper accepts:
 
 The role options select between the configured agent and user identities;
 they do not accept literal `Name <email>` values. The message sign-off always
-uses the full agent identity: `Commit message authored by NAME <EMAIL>`. If
-either agent environment variable is missing or malformed, the helper fails
-and asks for that configuration to be fixed. If a role selects `user`, both
-global Git user settings must also be configured and valid.
+uses the full selected identity: `Commit message authored by NAME <EMAIL>`.
+`--message-author` is required. If either agent environment variable is
+missing or malformed, the helper fails and asks for that configuration to be
+fixed. If any role selects `user`, both global Git user settings must also be
+configured and valid.
 
 The helper rejects content-selection arguments such as `--all` and pathspecs
 so that it can check the staged index. It refuses a commit with more than 40
@@ -81,14 +84,14 @@ When you author a git commit message, follow the 50/72 rule:
 
 Capitalize the subject line. Write it in the imperative mood.
 
-Every commit message you author must have a blank line after the body (or subject if no body) followed by `Commit message authored by NAME <EMAIL>`, using the configured agent identity:
+Every commit message you author must have a blank line after the body (or subject if no body) followed by `Commit message authored by NAME <EMAIL>`, using the identity selected by `--message-author`:
 
 > <your message>
 >
 > Commit message authored by Agent Name <agent@example.com>
 
 `commit.py` constructs this format from `--subject` and `--body`. It validates
-the subject length, wraps the body, and appends the configured agent
+the subject length, wraps the body, and appends the selected message-author
 identity.
 
 Commit messages must, at minimum, convey:
@@ -177,7 +180,8 @@ Once you have determined who gets what attributions, record them in the commit i
 Name parties using Git's standard `Name <email>` format. The user identity
 comes from global Git's `user.name` and `user.email`; the agent identity comes
 from the required `AGENT_NAME` and `AGENT_EMAIL` harness environment
-variables. Use `agent` or `user` to select a party in each role option.
+variables. Use `agent` or `user` to select a party in each role option,
+including `--message-author`.
 
 Example message with message attribution and trailers:
 
@@ -190,11 +194,11 @@ Example message with message attribution and trailers:
 > Designed-by: John Smith <john.smith@example.com>
 > Initiated-by: John Smith <john.smith@example.com>
 
-`commit.py` constructs this attribution from `--author`, repeatable
-`--co-author` and `--designer` selectors, and `--human-initiator`. It resolves
-each selector from the two configured identities, sets the Git author,
-validates identity and role combinations, and appends the required trailers
-in the supplied order.
+`commit.py` constructs this attribution from `--message-author`, `--author`,
+repeatable `--co-author` and `--designer` selectors, and
+`--human-initiator`. It resolves each selector from the two configured
+identities, sets the Git author, validates identity and role combinations, and
+appends the required trailers in the supplied order.
 
 For example:
 
@@ -202,6 +206,7 @@ For example:
 python commit.py `
   --subject "Add selector cache to matching" `
   --body "Add a selector cache to matching. This speeds up..." `
+  --message-author agent `
   --author agent `
   --co-author user `
   --designer agent `
