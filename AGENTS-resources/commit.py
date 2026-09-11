@@ -358,6 +358,12 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument("--subject", "--first-line", dest="subject", required=True)
     parser.add_argument("--body", help="Body prose; blank lines separate paragraphs.")
     parser.add_argument(
+        "--message-author",
+        required=True,
+        choices=IDENTITY_SELECTORS,
+        help="Identity that authored the commit message: agent or user.",
+    )
+    parser.add_argument(
         "--author",
         required=True,
         choices=IDENTITY_SELECTORS,
@@ -393,8 +399,15 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
 def main() -> int:
     args, git_arguments = parse_args()
     try:
-        selectors = [args.author, *args.co_author, *args.designer, args.human_initiator]
+        selectors = [
+            args.message_author,
+            args.author,
+            *args.co_author,
+            *args.designer,
+            args.human_initiator,
+        ]
         agent, user = load_identities(selectors)
+        message_author = resolve_identity(args.message_author, agent, user)
         author = resolve_identity(args.author, agent, user)
         co_authors = [
             resolve_identity(selector, agent, user) for selector in args.co_author
@@ -407,7 +420,7 @@ def main() -> int:
             args.subject,
             args.body,
             args.large_change_justification,
-            agent,
+            message_author,
             author,
             co_authors,
             designers,
