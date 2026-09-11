@@ -27,7 +27,7 @@ the `global-guidance` skill, resolve `scripts/commit.py` relative to the skill
 directory. Otherwise, use
 `<AGENT_GLOBAL_CONFIG_DIR>/AGENTS-resources/commit.py`.
 
-Stage the exact contents first, then invoke the helper with:
+Stage the exact contents first, then invoke the helper. Example:
 
 ```powershell
 python commit.py `
