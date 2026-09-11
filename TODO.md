@@ -16,6 +16,7 @@
 - Should commit helper use `--trailer`?
 - Should commit helper use an injection strategy like the one described in https://ampcode.com/threads/T-01a08cfd-8030-73d8-9383-3300a2392120?
 - Remove character limit on `--large-change-justification`.
+    - Remove requirement for "concise reason"?
 - Amp made a large commit for the test cases (now 66f38d8), which I think may have been unnecessary
 - change "items" to "code units" (almost certainly this was ambiguous)
 - I copy/pasted prose from chat into my mach-6-paper AGENTS.md, and that was the majority of the change, yet 5.6 luna medium set the author as me when I just asked it to commit the file (which was mostly copy/pasted). I might need to add instructions to review the changes before committing so that it can tell whether it wrote the thing.
