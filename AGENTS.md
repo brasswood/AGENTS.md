@@ -75,13 +75,13 @@ When you author a git commit message, follow the 50/72 rule:
 
 Capitalize the subject line. Write it in the imperative mood.
 
-Every commit message you author must have a blank line after the body (or subject if no body) followed by `Commit message authored by NAME <EMAIL>`, using the identity selected by `--message-author`:
+Every commit message must have a blank line after the body (or subject if no body) followed by `Commit message authored by NAME <EMAIL>`:
 
 > <your message>
 >
 > Commit message authored by Agent Name <agent@example.com>
 
-`commit.py` constructs this format from `--subject` and `--body`. It validates
+`commit.py` constructs this format from `--subject`, `--body`, and `--message-author`. It validates
 the subject length, wraps the body, and appends the selected message-author
 identity.
 

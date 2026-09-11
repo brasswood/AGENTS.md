@@ -2,7 +2,6 @@
 - Inverted pyramid/Progressive elaboration: generally fix up the AI writing to do that.
     - https://chatgpt.com/share/6aa45d89-d684-83e8-99f3-825f2e38ac87
 - Clean up "selectors" terminology with a fresh thread
-- Change "using the identity selected by `--message-author`" to something else that doesn't assume the `commit.py` script works.
 - Possibly remove mention of `--message-author` in attribution section since it's already covered.
 - Should I hide the information about "when to record" certain trailers but only show it when the commit script is not available? Should I even consider a situation where the script is not available or doesn't work?
 - Diagnose why cheaper models are not using the commit helper script altogether
@@ -32,6 +31,7 @@
 - give concrete examples
 
 ## Done
+- Change "using the identity selected by `--message-author`" to something else that doesn't assume the `commit.py` script works.
 - Clean up "they do not accept literal `Name <email>` values."
 - Clean up "`--message-author` is required" with a fresh thread.
 - Have script show all env variables that need to be set.
