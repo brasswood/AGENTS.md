@@ -328,6 +328,10 @@ class CommitTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2)
                 self.assertIn("agent", result.stderr)
                 self.assertIn("not configured", result.stderr)
+                missing = "name" if variable == "AGENT_NAME" else "email"
+                present = "email" if variable == "AGENT_NAME" else "name"
+                self.assertIn(f"agent {missing} is not configured", result.stderr)
+                self.assertNotIn(f"agent {present} is not configured", result.stderr)
 
     def test_rejects_malformed_agent_environment(self) -> None:
         result = run_helper(
@@ -360,6 +364,26 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("global Git setting user.name is not configured", result.stderr)
+
+    def test_reports_all_missing_global_user_identity_values(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test missing global identity settings",
+            "--message-author",
+            "user",
+            "--author",
+            "user",
+            "--human-initiator",
+            "user",
+            environment={"AGENT_NAME": None, "AGENT_EMAIL": None},
+            global_config="",
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("agent name is not configured", result.stderr)
+        self.assertIn("agent email is not configured", result.stderr)
+        self.assertIn("global Git setting user.name is not configured", result.stderr)
+        self.assertIn("global Git setting user.email is not configured", result.stderr)
 
     def test_agent_only_roles_do_not_require_global_user_identity(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
