@@ -1,5 +1,11 @@
 # Guidelines
 
+## Write Technical Prose with Progressive Elaboration
+
+Use the inverted-pyramid, or progressive-elaboration, principle when writing technical prose: lead with the main purpose, conclusion, or actionable instruction, then provide the explanation needed to understand or apply it. Put supporting rationale, background, caveats, examples, and implementation details after the material they explain, so a reader can stop early and still retain the essential point.
+
+Organize information by the reader's needs and by conceptual dependency, not by the order in which you discovered or generated it. Introduce a concept before discussing its mechanics or exceptions, and keep qualifications near the claims they qualify. Before finalizing, check each paragraph's placement: move it later if it explains material introduced later, and move it earlier if readers need it to interpret an earlier point.
+
 ## Organize Your Work Into Commits
 Commits are the atoms of change. A commit's diff and message explain one comprehensible thing that changed; a sequence of commits explains the project's evolution over time.
 
