@@ -297,12 +297,10 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("invalid choice", result.stderr)
 
-    def test_rejects_message_author_argument(self) -> None:
+    def test_requires_message_author_argument(self) -> None:
         result = run_helper(
             "--subject",
-            "Test removed message author",
-            "--message-author",
-            "Agent Name",
+            "Test missing message author",
             "--author",
             "agent",
             "--human-initiator",
@@ -310,7 +308,7 @@ class CommitTests(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 2)
-        self.assertIn("invalid choice", result.stderr)
+        self.assertIn("the following arguments are required: --message-author", result.stderr)
 
     def test_requires_agent_environment(self) -> None:
         for variable in ("AGENT_NAME", "AGENT_EMAIL"):
@@ -415,14 +413,15 @@ class CommitTests(unittest.TestCase):
             "--subject",
             "Test user-selected author",
             "--author",
-            "user",
+            "agent",
             "--human-initiator",
-            "user",
+            "agent",
+            message_author="user",
         )
 
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertTrue(commit.startswith(f"{USER}\n"), commit)
-        self.assertIn(f"Commit message authored by {AGENT}", commit)
+        self.assertTrue(commit.startswith(f"{AGENT}\n"), commit)
+        self.assertIn(f"Commit message authored by {USER}", commit)
 
     def test_rejects_overlong_agent_message_identity(self) -> None:
         result = run_helper(
