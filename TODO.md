@@ -1,9 +1,17 @@
 # TODO:
+- Don't imply agents should set the environment variables.
+- Clean up "selectors" terminology with a fresh thread
+- Clean up "`--message-author` is required" with a fresh thread.
+- Change "using the identity selected by `--message-author`" to something else that doesn't assume the `commit.py` script works.
+- Clean up "they do not accept literal `Name <email>` values."
+- Possibly remove mention of `--message-author` in attribution section since it's already covered.
+- Should I hide the information about "when to record" certain trailers but only show it when the commit script is not available? Should I even consider a situation where the script is not available or doesn't work?
 - Diagnose why cheaper models are not using the commit helper script altogether
 - Look at `85122816421b2048819df5d0e252eed07eeb60ad` in mach-6. 5.6 Terra said this commit was indivisible, I'm not sure I agree. E.g. maybe method bodies could have been filled with `todo!()` and implemented one at a time. Diagnose this and/or give this as an example option in AGENTS.md.
 - 5.6 luna high also overrode a 100-line change to `commit.py`. That's a problem. https://ampcode.com/threads/T-01a08d68-1872-719b-9000-39b9cd725a41
 - Get Amp to use "Amp" in commit messages
 - Add Amp orb specific skill to push to Github
+    - Actually, figure out how I want to sync orbs' work (potentially multiple in parallel) with my computer.
 - Figure out in "Commit.py guidance" chat (commit 15ccdec2d7b696a8e52482fe0f31a7078a9b393d) why it used brasswood@github instead of my identity.
 - does the commit helper reject `-- --author`?
 - Should commit helper use `--trailer`?
@@ -24,7 +32,9 @@
 - give concrete examples
 
 ## Done
-- Put my own voice in AGENTS.md modifications in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
+- Add `--message-author` back in some form
+- Fix git identity stuck as "Andrew" instead of "Andrew Riachi"
+- ~~Put my own voice in AGENTS.md modifications~~ in `c199e85423664f1c145f67bc8e9610a53f2e1c43`. Possibly reorganize around the commit script having its own section
     - Just let Amp write it. Did the reorganization, though.
 - give more concrete tripwires (e.g. after more than 40 insertions OR 40 deletions)
 - "One comprehensible thing" is definitely too subjective
