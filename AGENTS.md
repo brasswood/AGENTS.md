@@ -141,51 +141,8 @@ First, use the following rules to determine who is what. Here, "change" means th
 
 [^ties]: Ask the user to break ties.
 
-Once you have determined who gets what attributions, record them in the commit in order from top to bottom as follows:
-
-| Attribution | When to record | Method |
-| ----------- | -------------- | ------ |
-| Author | Always | Git commits' built-in author field, selected with `commit.py --author=agent` or `--author=user` |
-| Co-author | Record all Co-authors | `Co-authored-by: <CO-AUTHOR>` commit message trailers, in descending order of how much substantive text each Co-author wrote |
-| Designer | Record all Designers only when any are different from the Author or when there are any Co-authors | `Designed-by: <DESIGNER>` commit message trailers, in descending order of how much of the implementation solution each Designer introduced |
-| Human Initiator | Only exclude when the same as the Author and no Co-authors or Designers are recorded | `Initiated-by: <HUMAN-INITIATOR>` commit message trailer |
-
-Name parties using Git's standard `Name <email>` format. The user identity
-comes from global Git's `user.name` and `user.email`; the agent identity comes
-from the required `AGENT_NAME` and `AGENT_EMAIL` harness environment
-variables. Use `agent` or `user` to select a party in each role option,
-including `--message-author`.
-
-Example message with message attribution and trailers:
-
-> <your message>
->
-> Commit message authored by Agent Name <agent@example.com>
->
-> Co-authored-by: John Smith <john.smith@example.com>
-> Designed-by: Agent Name <agent@example.com>
-> Designed-by: John Smith <john.smith@example.com>
-> Initiated-by: John Smith <john.smith@example.com>
-
-`commit.py` constructs this attribution from `--message-author`, `--author`,
-repeatable `--co-author` and `--designer` selectors, and
-`--human-initiator`. It resolves each selector from the two configured
-identities, sets the Git author, validates identity and role combinations, and
-appends the required trailers in the supplied order.
-
-For example:
-
-```powershell
-python commit.py `
-  --subject "Add selector cache to matching" `
-  --body "Add a selector cache to matching. This speeds up..." `
-  --message-author agent `
-  --author agent `
-  --co-author user `
-  --designer agent `
-  --designer user `
-  --human-initiator user
-```
+Once you have determined who gets what attributions, provide those roles to
+`commit.py`.
 
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
