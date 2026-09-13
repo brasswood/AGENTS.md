@@ -67,23 +67,10 @@ commit against its first parent.
 The following sections explain message formatting and attribution. Much of this, but not all of it, is handled by the helper.
 
 ### Follow Commit Message Authoring Guidance
-When you author a git commit message, follow the 50/72 rule:
+When you author a git commit message, keep the subject line at 50 characters
+or fewer.
 
-- Keep the subject line at 50 characters or fewer.
-- After the subject, optionally add a blank line and a body wrapped at 72
-  characters.
-
-Capitalize the subject line. Write it in the imperative mood.
-
-Every commit message must have a blank line after the body (or subject if no body) followed by `Commit message authored by NAME <EMAIL>`:
-
-> <your message>
->
-> Commit message authored by Agent Name <agent@example.com>
-
-`commit.py` constructs this format from `--subject`, `--body`, and `--message-author`. It validates
-the subject length, wraps the body, and appends the selected message-author
-identity.
+Write the subject in the imperative mood and capitalize it.
 
 Commit messages must, at minimum, convey:
 
@@ -97,11 +84,10 @@ Insufficient:
 Sufficient:
 
 > Expose parsed selector CSS strings
->
-> Expose parsed selector CSS strings from selector parsing functions in
-> `SelectorList`.
 
-(If the entire sentence had fit in the subject line, no body would have been used.)
+> Expose parsed selector CSS strings from selector parsing functions in `SelectorList`.
+
+(If the entire sentence fits in the subject line, no body is needed.)
 
 Additionally, if the commit is one out of several working toward an end goal, then the commit message must state the end goal and convey how it fits into that end goal.
 
@@ -109,9 +95,7 @@ Example (the end goal was, "Make the prefix interner so that it uses the CSS str
 
 > Expose parsed selector CSS strings
 >
-> Expose parsed selector CSS strings from selector parsing functions in
-> `SelectorList`. These will eventually be passed to the selector prefix
-> interner to avoid expensive re-serialization of parsed `Selector`s.
+> Expose parsed selector CSS strings from selector parsing functions in `SelectorList`. These will eventually be passed to the selector prefix interner to avoid expensive re-serialization of parsed `Selector`s.
 
 After meeting the above requirements, if the commit's patchset remains abstruse, needs further justification, or uses a nonstandard approach, then elaborate even further.
 
@@ -137,9 +121,7 @@ Example:
 >   the original in-place-modified list, which has the stale extra
 >   information. The equality check returns false.
 >
-> By comparing strings, we can also now use a `HashMap` to do the reverse
-> lookup instead of linear searching a vector. This has caused a
-> noticeable speedup.
+> By comparing strings, we can also now use a `HashMap` to do the reverse lookup instead of linear searching a vector. This has caused a noticeable speedup.
 
 #### Give Proper Attribution
 Each commit has one Author, zero or more Co-authors, zero or more Designers, and one Human Initiator. These must be attributed in the commit, independently of attributing the author of the commit _message_, so that others can determine the provenance of the change.
