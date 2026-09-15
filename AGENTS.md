@@ -133,7 +133,19 @@ First, use the following rules to determine who is what. Here, "change" means th
 [^ties]: Ask the user to break ties.
 
 Once you have determined who gets what attributions, provide those roles to
-`commit.py`.
+`commit.py`. For example:
+
+```powershell
+python commit.py `
+  --subject "Add selector cache to matching" `
+  --body "Add a selector cache to matching. This speeds up..." `
+  --message-author agent `
+  --author agent `
+  --co-author user `
+  --designer agent `
+  --designer user `
+  --human-initiator user
+```
 
 #### Mind PowerShell Newlines
 In PowerShell, do not use `\n` to represent line breaks in strings: this gets stored as the literal characters `\` and `n`. For a multiline string, use a PowerShell here-string with actual newlines or `` `n `` in an expandable string.
