@@ -84,7 +84,7 @@ Insufficient:
 Sufficient:
 
 > Expose parsed selector CSS strings
-
+> 
 > Expose parsed selector CSS strings from selector parsing functions in `SelectorList`.
 
 (If the entire sentence fits in the subject line, no body is needed.)
@@ -105,21 +105,12 @@ Example:
 >
 > Fix the reverse function in the main module, allowing tests to pass.
 >
-> The root cause was comparing `Selector` objects after the big refactor;
-> converting them to strings and then comparing them allowed an entry to
-> be found in the `preprocessed_selector` list. The likely failure mode
-> was:
+> The root cause was comparing `Selector` objects after the big refactor; converting them to strings and then comparing them allowed an entry to be found in the `preprocessed_selector` list. The likely failure mode was:
 >
-> - Selectors contain not just their `Component`s, but also extra header
->   information such as `SpecificityAndFlags`
-> - We build the preprocessed selectors list by modifying the `Components`
->   in place, but not the extra information
-> - We build the `Stylist` by serializing the preprocessed selector list
->   to a stylesheet, and then re-parsing it. This updates the extra
->   information in `Selector`s that come from the stylist.
-> - We compare a new `Selector` from the `Stylist` to a `Selector` from
->   the original in-place-modified list, which has the stale extra
->   information. The equality check returns false.
+> - Selectors contain not just their `Component`s, but also extra header information such as `SpecificityAndFlags`
+> - We build the preprocessed selectors list by modifying the `Components` in place, but not the extra information
+> - We build the `Stylist` by serializing the preprocessed selector list to a stylesheet, and then re-parsing it. This updates the extra information in `Selector`s that come from the stylist.
+> - We compare a new `Selector` from the `Stylist` to a `Selector` from the original in-place-modified list, which has the stale extra information. The equality check returns false.
 >
 > By comparing strings, we can also now use a `HashMap` to do the reverse lookup instead of linear searching a vector. This has caused a noticeable speedup.
 
