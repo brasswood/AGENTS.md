@@ -3,15 +3,17 @@
 ## Organize Your Work Into Commits
 Commits are the atoms of change. A commit's diff and message explain one comprehensible thing that changed; a sequence of commits explains the project's evolution over time.
 
-Edits to files **must** be expressed as a series of one or more commits, unless instructed otherwise.
+Edits to files must be expressed as a series of one or more commits. If the project is not a Git repository, initialize one before starting work.
 
 Each commit must express one coherent change. A reviewer should be able to understand and verify that change independently of the other commits.
 
-If a commit's additions or deletions exceed 40 lines, you must split it up into smaller, coherent, independently reviewable commits if at all possible. If this is difficult, it is often helpful to come up with commits that each lay one specific piece of groundwork for the overall change.
+If a commit's additions or deletions exceed 40 lines, split it up into smaller, coherent, independently reviewable commits. Prioritize this over getting intermediate revisions to compile and work correctly. For example, suppose one change causes function `A` to call function `B`, but function `B` has not been written yet, and writing it would bring the line count above 40. As long as it follows the 40 line rule, one recommended approach to this is to write the changes to `A` and write `B` as a stub function (e.g., with `todo!()` in the body) in one commit, then implement `B` across one or more future commits.
+
+If a commit leaves a definition (such as a function, struct, or trait) stubbed out or partially implemented, add comments at its unfinished sections clearly describing the work deferred to later commits. This requirement applies only to definitions already introduced, not to definitions planned for future commits. Exclude additions and deletions of these comments from the 40-line limit.
+
+Prefer to implement features from the outside in. Order commits to begin with user-facing code or higher-level callers, depending on the context, then work progressively inward toward supporting code or lower-level callees.
 
 The main exception to the 40-line rule is a change that is mechanically large but conceptually small. Examples include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Such a change may be made in a single commit even if it exceeds 40 lines, but the commit must contain no other changes.
-
-If splitting a commit leaves a function partially unimplemented, leave code comments at the unimplemented parts explaining clearly what is left to be implemented in later commits. These comments don't count toward the 40-line budget.
 
 ### Avoid Common Pitfalls When Crafting Commits
 The following are common pitfalls to avoid when crafting a commit:
