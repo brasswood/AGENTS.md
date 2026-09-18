@@ -16,8 +16,6 @@ Prefer to implement features from the outside in. Order commits to begin with us
 The main exception to the 40-line rule is a change that is mechanically large but conceptually small. Examples include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Such a change may be made in a single commit even if it exceeds 40 lines, but the commit must contain no other changes.
 
 ### Avoid Common Pitfalls When Crafting Commits
-The following are common pitfalls to avoid when crafting a commit:
-
 Do not move a section of code into a new module and implement a new feature in that section of code in the same commit. Instead, first move the intended code into the new module in one commit, then make the remaining changes in subsequent commits.
 
 Do not run the formatter on code you didn't touch in a commit. This introduces noise not related to the change. If you want to format just your changes, use `rustfmt --file-lines` if working with Rust code. Note that `cargo fmt` does not support formatting specific lines or files.
