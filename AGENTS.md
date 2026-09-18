@@ -13,7 +13,20 @@ If a commit leaves a definition (such as a function, struct, or trait) stubbed o
 
 Prefer to implement features from the outside in. Order commits to begin with user-facing code or higher-level callers, depending on the context, then work progressively inward toward supporting code or lower-level callees.
 
-The main exception to the 40-line rule is a change that is mechanically large but conceptually small. Examples include renaming a symbol, renaming a file, updating a function's call sites as a result of changing its signature, and moving a large section of code without otherwise changing it. Such a change may be made in a single commit even if it exceeds 40 lines, but the commit must contain no other changes.
+### Exceptions
+Generated artifacts do not need to be tracked if they can be fully derived from tracked sources.
+
+If a fully-derivable generated artifact is tracked for some reason, the changes to it which are as a result of changes to tracked sources that do follow the 40-line rule, do not count against the 40-line limit.
+
+Additions or deletions of the aforementioned comments explaining deferred work do not count against the 40-line limit.
+
+The following are additional exceptions to the 40-line rule:
+- Renaming a symbol
+- Changing a function's signature and propagating that change to its call sites
+- Moving a section of code when that move only changes the organization and not the behavior of the code. An example is moving a function to a different module.
+These changes are allowed to exceed 40-lines. However, you must make them one at a time and not include any other changes with them.
+
+The exceptions in this section are the only exceptions to the 40-line rule. Any commit with more than 40 additions or deletions must clearly fall under one of these exceptions. If a change needs to break the rule but it doesn't fall clearly under one of these exceptions, discuss it with the user before proceeding.
 
 ### Avoid Common Pitfalls When Crafting Commits
 Do not move a section of code into a new module and implement a new feature in that section of code in the same commit. Instead, first move the intended code into the new module in one commit, then make the remaining changes in subsequent commits.
