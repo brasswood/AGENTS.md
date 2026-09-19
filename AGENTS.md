@@ -29,7 +29,9 @@ These changes are allowed to exceed 40-lines. However, you must make them one at
 The exceptions in this section are the only exceptions to the 40-line rule. Any commit with more than 40 additions or deletions must clearly fall under one of these exceptions. If a change needs to break the rule but it doesn't fall clearly under one of these exceptions, discuss it with the user before proceeding.
 
 ### Avoid Common Pitfalls When Crafting Commits
-Do not move a section of code into a new module and implement a new feature in that section of code in the same commit. Instead, first move the intended code into the new module in one commit, then make the remaining changes in subsequent commits.
+If you move a section of code for organizational purposes, do not make any other changes to the repository in the same commit.
+
+Do not rename a file and modify its contents in the same commit.
 
 Do not run the formatter on code you didn't touch in a commit. This introduces noise not related to the change. If you want to format just your changes, use `rustfmt --file-lines` if working with Rust code. Note that `cargo fmt` does not support formatting specific lines or files.
 
