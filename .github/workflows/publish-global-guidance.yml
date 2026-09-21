@@ -24,22 +24,33 @@ jobs:
         run: npm install --global @ampcode/cli
       - name: Publish personal skill
         env:
-          AMP_API_KEY: ${{ secrets.AMP_API_KEY }}
+          AMP_API_KEY_GMAIL: ${{ secrets.AMP_API_KEY }}
+          AMP_API_KEY_UTAH: ${{ secrets.AMP_API_KEY_UTAH }}
         run: |
           set -euo pipefail
-          repository="$RUNNER_TEMP/user-skills"
-          skill="$repository/global-guidance"
-          amp clone user-skills "$repository"
-          rm -rf "$skill"
-          mkdir -p "$skill/scripts"
-          printf '%s\n' '---' 'name: global-guidance' \
-            'description: Provides global coding, commit, and engineering guidance. Use before starting any work in Amp.' \
-            '---' '' > "$skill/SKILL.md"
-          cat AGENTS.md >> "$skill/SKILL.md"
-          cp AGENTS-resources/commit.py "$skill/scripts/commit.py"
-          git -C "$repository" add global-guidance
-          git -C "$repository" diff --cached --quiet && exit 0
-          git -C "$repository" config user.name 'github-actions[bot]'
-          git -C "$repository" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C "$repository" commit -m 'Publish global-guidance skill'
-          git -C "$repository" push origin HEAD:main
+          : "${AMP_API_KEY_GMAIL:?Set the AMP_API_KEY repository secret for the Gmail account}"
+          : "${AMP_API_KEY_UTAH:?Set the AMP_API_KEY_UTAH repository secret for the Utah account}"
+
+          publish() {
+            local api_key="$1"
+            local repository="$2"
+            local skill="$repository/global-guidance"
+
+            AMP_API_KEY="$api_key" amp clone user-skills "$repository"
+            rm -rf "$skill"
+            mkdir -p "$skill/scripts"
+            printf '%s\n' '---' 'name: global-guidance' \
+              'description: Provides global coding, commit, and engineering guidance. Use before starting any work in Amp.' \
+              '---' '' > "$skill/SKILL.md"
+            cat AGENTS.md >> "$skill/SKILL.md"
+            cp AGENTS-resources/commit.py "$skill/scripts/commit.py"
+            git -C "$repository" add global-guidance
+            git -C "$repository" diff --cached --quiet && return 0
+            git -C "$repository" config user.name 'github-actions[bot]'
+            git -C "$repository" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git -C "$repository" commit -m 'Publish global-guidance skill'
+            git -C "$repository" push origin HEAD:main
+          }
+
+          publish "$AMP_API_KEY_GMAIL" "$RUNNER_TEMP/user-skills-gmail"
+          publish "$AMP_API_KEY_UTAH" "$RUNNER_TEMP/user-skills-utah"

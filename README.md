@@ -9,9 +9,11 @@
 Relevant pushes to `main` publish `AGENTS.md` and its commit helper as
 the `global-guidance` Amp personal skill. One-time setup:
 
-1. Create an access token in Amp **Personal Settings → Security**.
-2. In this GitHub repository, create the Actions repository secret
-   `AMP_API_KEY` containing that token.
+1. Create an access token in Amp **Personal Settings → Security** for each
+   account.
+2. In this GitHub repository, create these Actions repository secrets:
+   - `AMP_API_KEY` containing the token for the Gmail account.
+   - `AMP_API_KEY_UTAH` containing the token for the Utah account.
 3. In Amp's web-managed **Global AGENTS.md**, add this instruction once:
 
    > Before starting any work, load the `global-guidance` personal skill and
