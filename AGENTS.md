@@ -20,7 +20,7 @@ Generated artifacts may remain untracked if they can be fully reproduced from tr
 
 Exclude the following additions and deletions when applying the 40-line limit:
 
-- Changes to tracked generated artifacts that can be fully reproduced from tracked sources, provided the artifact changes result from source changes that comply with the 40-line rule.
+- Changes to tracked generated artifacts that can be fully reproduced from tracked sources, provided the artifact changes result only from source changes in the same commit.
 - Comments explaining work deferred at unfinished definitions, as required above.
 
 The following changes may exceed the 40-line limit. Make each such change in its own commit, with no other changes:
