@@ -9,7 +9,7 @@ Each commit must express one coherent change. A reviewer should be able to under
 
 Limit each commit to at most 40 added lines and at most 40 deleted lines, subject to the exceptions below. Split larger changes into smaller, coherent, independently reviewable commits. Meeting this limit takes priority over keeping intermediate revisions compiling and working.
 
-For example, if making `A` call a new function `B` and implementing `B` would exceed the limit, first commit the changes to `A` with a stub for `B` (e.g., `todo!()`). Implement `B` in later commits, keeping each commit within the limit.
+For example, if making `A` call a new function `B` and implementing `B` would exceed the limit, first commit the changes to `A` with a stub for `B` (e.g., `todo!()`) if this commit does not exceed the limit. Implement `B` in later commits, keeping each commit within the limit.
 
 If a commit leaves a definition (such as a function, struct, or trait) stubbed out or partially implemented, comment each unfinished section to explain the work deferred to later commits. This requirement applies only to definitions already introduced, not to definitions planned for future commits.
 
