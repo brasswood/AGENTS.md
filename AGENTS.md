@@ -3,30 +3,33 @@
 ## Organize Your Work Into Commits
 Commits are the atoms of change. A commit's diff and message explain one comprehensible thing that changed; a sequence of commits explains the project's evolution over time.
 
-Edits to files must be expressed as a series of one or more commits. If the project is not a Git repository, initialize one before starting work.
+Record all file edits in one or more commits. If the project is not a Git repository, initialize one before editing files. Fully reproducible generated artifacts may remain untracked, as described below.
 
 Each commit must express one coherent change. A reviewer should be able to understand and verify that change independently of the other commits.
 
-If a commit's additions or deletions exceed 40 lines, split it up into smaller, coherent, independently reviewable commits. Prioritize this over getting intermediate revisions to compile and work correctly. For example, suppose one change causes function `A` to call function `B`, but function `B` has not been written yet, and writing it would bring the line count above 40. As long as it follows the 40 line rule, one recommended approach to this is to write the changes to `A` and write `B` as a stub function (e.g., with `todo!()` in the body) in one commit, then implement `B` across one or more future commits.
+Limit each commit to at most 40 added lines and at most 40 deleted lines, subject to the exceptions below. Split larger changes into smaller, coherent, independently reviewable commits. Meeting this limit takes priority over keeping intermediate revisions compiling and working.
 
-If a commit leaves a definition (such as a function, struct, or trait) stubbed out or partially implemented, add comments at its unfinished sections clearly describing the work deferred to later commits. This requirement applies only to definitions already introduced, not to definitions planned for future commits. Exclude additions and deletions of these comments from the 40-line limit.
+For example, if making `A` call a new function `B` and implementing `B` would exceed the limit, first commit the changes to `A` with a stub for `B` (e.g., `todo!()`). Implement `B` in later commits, keeping each commit within the limit.
+
+If a commit leaves a definition (such as a function, struct, or trait) stubbed out or partially implemented, comment each unfinished section to explain the work deferred to later commits. This requirement applies only to definitions already introduced, not to definitions planned for future commits.
 
 Prefer to implement features from the outside in. Order commits to begin with user-facing code or higher-level callers, depending on the context, then work progressively inward toward supporting code or lower-level callees.
 
-### Exceptions
-Generated artifacts do not need to be tracked if they can be fully derived from tracked sources.
+### Exceptions to Tracking and the 40-Line Limit
+Generated artifacts may remain untracked if they can be fully reproduced from tracked sources.
 
-If a fully-derivable generated artifact is tracked for some reason, the changes to it which are as a result of changes to tracked sources that do follow the 40-line rule, do not count against the 40-line limit.
+Exclude the following additions and deletions when applying the 40-line limit:
 
-Additions or deletions of the aforementioned comments explaining deferred work do not count against the 40-line limit.
+- Changes to tracked generated artifacts that can be fully reproduced from tracked sources, provided the artifact changes result from source changes that comply with the 40-line rule.
+- Comments explaining work deferred at unfinished definitions, as required above.
 
-The following are additional exceptions to the 40-line rule:
-- Renaming a symbol
-- Changing a function's signature and propagating that change to its call sites
-- Moving a section of code when that move only changes the organization and not the behavior of the code. An example is moving a function to a different module.
-These changes are allowed to exceed 40-lines. However, you must make them one at a time and not include any other changes with them.
+The following changes may exceed the 40-line limit. Make each such change in its own commit, with no other changes:
 
-The exceptions in this section are the only exceptions to the 40-line rule. Any commit with more than 40 additions or deletions must clearly fall under one of these exceptions. If a change needs to break the rule but it doesn't fall clearly under one of these exceptions, discuss it with the user before proceeding.
+- Rename a symbol.
+- Change a function's signature and update its call sites accordingly.
+- Move a section of code without modifying it or changing its behavior, such as moving a function to another module.
+
+These are the only exceptions to the 40-line rule. If a proposed commit would exceed the limit and does not clearly qualify for an exception above, discuss it with the user before proceeding.
 
 ### Avoid Common Pitfalls When Crafting Commits
 If you move a section of code for organizational purposes, do not make any other changes to the repository in the same commit.
