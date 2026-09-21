@@ -74,7 +74,7 @@ The helper rejects content-selection arguments such as `--all` and pathspecs
 so that it can check the staged index. It refuses a commit with more than 40
 additions or deletions. If that numerical check exceeds the limit but this
 guidance still permits the commit, pass `--large-change-justification` with a
-concise reason. The helper records that reason in the commit message. Do not
+reason. The helper records that reason in the commit message. Do not
 use the override merely because a larger change has already been written.
 
 Arguments after `--` are forwarded to `git commit`. Do not forward content
