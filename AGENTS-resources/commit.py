@@ -177,12 +177,12 @@ def format_amp_thread_trailer() -> str | None:
     return f"{AMP_THREAD_TRAILER}{amp_url.rstrip('/')}/threads/{thread_id}"
 
 
-def validate_single_line(value: str, name: str, width: int) -> str:
+def validate_single_line(value: str, name: str, width: int | None) -> str:
     if "\n" in value or "\r" in value:
         raise ValueError(f"{name} must be one line")
     if not value or value != value.strip():
         raise ValueError(f"{name} must not be empty or have surrounding spaces")
-    if len(value) > width:
+    if width is not None and len(value) > width:
         raise ValueError(f"{name} must be at most {width} characters")
     return value
 
@@ -229,7 +229,7 @@ def format_message(
         justification = validate_single_line(
             large_change_justification,
             "large-change justification",
-            BODY_WIDTH - len(LARGE_CHANGE_PREFIX),
+            None,
         )
         parts.extend(("", f"{LARGE_CHANGE_PREFIX}{justification}"))
     parts.extend(("", f"{AUTHOR_PREFIX}{message_author_text}"))
@@ -348,7 +348,7 @@ def run_commit(
         justification = validate_single_line(
             large_change_justification,
             "large-change justification",
-            BODY_WIDTH - len(LARGE_CHANGE_PREFIX),
+            None,
         )
         print(
             f"warning: allowing {additions} additions and {deletions} deletions: "

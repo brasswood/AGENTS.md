@@ -227,6 +227,7 @@ class CommitTests(unittest.TestCase):
                 self.assertIn("must not", result.stderr)
 
     def test_records_large_change_justification(self) -> None:
+        justification = ("A deliberately long justification " * 4).strip()
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
             subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
@@ -236,7 +237,7 @@ class CommitTests(unittest.TestCase):
             result = run_test_commit(
                 repository,
                 "--large-change-justification",
-                "Mechanical generated fixture",
+                justification,
             )
             message = subprocess.run(
                 ["git", "show", "-s", "--format=%B"],
@@ -249,7 +250,7 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("warning: allowing 41 additions", result.stderr)
         self.assertIn(
-            "Large commit justification: Mechanical generated fixture\n\n"
+            f"Large commit justification: {justification}\n\n"
             f"Commit message authored by {AGENT}",
             message,
         )
