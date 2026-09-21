@@ -231,7 +231,15 @@ def format_message(
             "large-change justification",
             None,
         )
-        parts.extend(("", f"{LARGE_CHANGE_PREFIX}{justification}"))
+        wrapped_justification = textwrap.fill(
+            justification,
+            width=BODY_WIDTH,
+            initial_indent=LARGE_CHANGE_PREFIX,
+            subsequent_indent="",
+            break_long_words=False,
+            break_on_hyphens=False,
+        )
+        parts.extend(("", wrapped_justification))
     parts.extend(("", f"{AUTHOR_PREFIX}{message_author_text}"))
     trailers = format_attribution_trailers(
         author, co_authors, designers, human_initiator
