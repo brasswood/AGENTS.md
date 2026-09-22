@@ -67,6 +67,12 @@ def parse_identity(value: str) -> Identity:
     return Identity(name, match.group("email"))
 
 
+def parse_identity_argument(value: str) -> str | Identity:
+    if value in IDENTITY_SELECTORS:
+        return value
+    return parse_identity(value)
+
+
 def identity_from_parts(
     name: str | None,
     email: str | None,
@@ -101,7 +107,7 @@ def read_global_git_value(key: str) -> str:
     return result.stdout.removesuffix("\n").removesuffix("\r")
 
 
-def load_identities(selectors: list[str]) -> tuple[Identity, Identity | None]:
+def load_identities(selectors: list[str | Identity]) -> tuple[Identity, Identity | None]:
     errors: list[str] = []
     agent = identity_from_parts(
         os.environ.get(AGENT_NAME_ENV),
@@ -132,8 +138,10 @@ def load_identities(selectors: list[str]) -> tuple[Identity, Identity | None]:
 
 
 def resolve_identity(
-    selector: str, agent: Identity, user: Identity | None
+    selector: str | Identity, agent: Identity, user: Identity | None
 ) -> Identity:
+    if isinstance(selector, Identity):
+        return selector
     if selector == "agent":
         return agent
     if selector == "user" and user is not None:
@@ -390,34 +398,34 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument(
         "--message-author",
         required=True,
-        choices=IDENTITY_SELECTORS,
-        help="Identity that authored the commit message: agent or user.",
+        type=parse_identity_argument,
+        help="Identity that authored the commit message: agent, user, or Name <email>.",
     )
     parser.add_argument(
         "--author",
         required=True,
-        choices=IDENTITY_SELECTORS,
-        help="Identity that authored the change: agent or user.",
+        type=parse_identity_argument,
+        help="Identity that authored the change: agent, user, or Name <email>.",
     )
     parser.add_argument(
         "--co-author",
         action="append",
         default=[],
-        choices=IDENTITY_SELECTORS,
-        help="Identity that co-authored the change: agent or user.",
+        type=parse_identity_argument,
+        help="Identity that co-authored the change: agent, user, or Name <email>.",
     )
     parser.add_argument(
         "--designer",
         action="append",
         default=[],
-        choices=IDENTITY_SELECTORS,
-        help="Identity that designed the change: agent or user.",
+        type=parse_identity_argument,
+        help="Identity that designed the change: agent, user, or Name <email>.",
     )
     parser.add_argument(
         "--human-initiator",
         required=True,
-        choices=IDENTITY_SELECTORS,
-        help="Identity that initiated the change: agent or user.",
+        type=parse_identity_argument,
+        help="Identity that initiated the change: agent, user, or Name <email>.",
     )
     parser.add_argument(
         "--large-change-justification",
