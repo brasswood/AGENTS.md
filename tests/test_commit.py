@@ -9,6 +9,11 @@ from pathlib import Path
 SCRIPT = Path(__file__).parents[1] / "AGENTS-resources" / "commit.py"
 AGENT = "Agent Name <agent@example.com>"
 USER = "Andrew Riachi <andrew.riachi@gmail.com>"
+CUSTOM_MESSAGE_AUTHOR = "Message Author <message@example.com>"
+CUSTOM_AUTHOR = "Custom Author <author@example.com>"
+CUSTOM_CO_AUTHOR = "Custom Co-author <co-author@example.com>"
+CUSTOM_DESIGNER = "Custom Designer <designer@example.com>"
+CUSTOM_INITIATOR = "Custom Initiator <initiator@example.com>"
 DEFAULT_GLOBAL_CONFIG = "[user]\nname = Andrew Riachi\nemail = andrew.riachi@gmail.com\n"
 
 
@@ -285,12 +290,12 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("designer is required", result.stderr)
 
-    def test_rejects_literal_identity_selector(self) -> None:
+    def test_rejects_malformed_custom_identity(self) -> None:
         result = run_helper(
             "--subject",
             "Test malformed selector",
             "--message-author",
-            AGENT,
+            "not an identity",
             "--author",
             "agent",
             "--human-initiator",
@@ -298,7 +303,7 @@ class CommitTests(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 2)
-        self.assertIn("invalid choice", result.stderr)
+        self.assertIn("identity must use the format", result.stderr)
 
     def test_requires_message_author_argument(self) -> None:
         result = run_helper(
@@ -449,6 +454,31 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue(commit.startswith(f"{AGENT}\n"), commit)
         self.assertIn(f"Commit message authored by {USER}", commit)
+
+    def test_accepts_custom_identity_for_each_attribution_role(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test custom identities",
+            "--author",
+            CUSTOM_AUTHOR,
+            "--co-author",
+            CUSTOM_CO_AUTHOR,
+            "--designer",
+            CUSTOM_DESIGNER,
+            "--human-initiator",
+            CUSTOM_INITIATOR,
+            message_author=CUSTOM_MESSAGE_AUTHOR,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            commit,
+            f"{CUSTOM_AUTHOR}\nTest custom identities\n\n"
+            f"Commit message authored by {CUSTOM_MESSAGE_AUTHOR}\n\n"
+            f"Co-authored-by: {CUSTOM_CO_AUTHOR}\n"
+            f"Designed-by: {CUSTOM_DESIGNER}\n"
+            f"Initiated-by: {CUSTOM_INITIATOR}\n\n",
+        )
 
     def test_rejects_overlong_agent_message_identity(self) -> None:
         result = run_helper(
