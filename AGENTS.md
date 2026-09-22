@@ -68,6 +68,8 @@ The helper accepts:
 - `--large-change-justification`
 - additional Git options after `--`
 
+`--human-initiator` defaults to `user` when omitted.
+
 Use a custom `Name <email>` only when the attribution belongs to someone
 other than yourself or the user.
 

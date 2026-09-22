@@ -429,9 +429,9 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     )
     parser.add_argument(
         "--human-initiator",
-        required=True,
+        default="user",
         type=parse_human_initiator_argument,
-        help="Identity that initiated the change: user or Name <email>.",
+        help="Identity that initiated the change: user or Name <email> (default: user).",
     )
     parser.add_argument(
         "--large-change-justification",

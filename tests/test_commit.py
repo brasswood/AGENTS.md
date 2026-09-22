@@ -470,6 +470,17 @@ class CommitTests(unittest.TestCase):
         self.assertTrue(commit.startswith(f"{AGENT}\n"), commit)
         self.assertIn(f"Commit message authored by {USER}", commit)
 
+    def test_defaults_human_initiator_to_user(self) -> None:
+        result, commit = create_commit(
+            "--subject",
+            "Test default human initiator",
+            "--author",
+            "agent",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"Initiated-by: {USER}", commit)
+
     def test_accepts_custom_identity_for_each_attribution_role(self) -> None:
         result, commit = create_commit(
             "--subject",
