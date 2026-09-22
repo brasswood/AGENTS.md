@@ -24,11 +24,11 @@ jobs:
         run: npm install --global @ampcode/cli
       - name: Publish personal skill
         env:
-          AMP_API_KEY_GMAIL: ${{ secrets.AMP_API_KEY }}
+          AMP_API_KEY_GMAIL: ${{ secrets.AMP_API_KEY_GMAIL }}
           AMP_API_KEY_UTAH: ${{ secrets.AMP_API_KEY_UTAH }}
         run: |
           set -euo pipefail
-          : "${AMP_API_KEY_GMAIL:?Set the AMP_API_KEY repository secret for the Gmail account}"
+          : "${AMP_API_KEY_GMAIL:?Set the AMP_API_KEY_GMAIL repository secret for the Gmail account}"
           : "${AMP_API_KEY_UTAH:?Set the AMP_API_KEY_UTAH repository secret for the Utah account}"
 
           publish() {
