@@ -64,7 +64,7 @@ The helper accepts:
 - `--author agent|user|Name <email>`
 - repeatable `--co-author agent|user|Name <email>`
 - repeatable `--designer agent|user|Name <email>`
-- `--human-initiator agent|user|Name <email>`
+- `--human-initiator user|Name <email>`
 - `--large-change-justification`
 - additional Git options after `--`
 

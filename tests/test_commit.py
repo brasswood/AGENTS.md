@@ -64,7 +64,7 @@ def run_with_git_arguments(*arguments: str) -> subprocess.CompletedProcess[str]:
         "--author",
         "agent",
         "--human-initiator",
-        "agent",
+        AGENT,
         "--",
         *arguments,
     )
@@ -81,7 +81,7 @@ def run_test_commit(
         "--author",
         "agent",
         "--human-initiator",
-        "agent",
+        AGENT,
         *arguments,
         cwd=repository,
     )
@@ -299,6 +299,21 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
+            AGENT,
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("identity must use the format", result.stderr)
+
+    def test_rejects_agent_selector_for_human_initiator(self) -> None:
+        result = run_helper(
+            "--subject",
+            "Test agent human initiator selector",
+            "--message-author",
+            "agent",
+            "--author",
+            "agent",
+            "--human-initiator",
             "agent",
         )
 
@@ -312,7 +327,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
         )
 
         self.assertEqual(result.returncode, 2)
@@ -329,7 +344,7 @@ class CommitTests(unittest.TestCase):
                     "--author",
                     "agent",
                     "--human-initiator",
-                    "agent",
+                    AGENT,
                     environment={variable: None},
                 )
 
@@ -350,7 +365,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             environment={"AGENT_EMAIL": "not-an-email"},
         )
 
@@ -407,7 +422,7 @@ class CommitTests(unittest.TestCase):
                 "--author",
                 "agent",
                 "--human-initiator",
-                "agent",
+                AGENT,
                 "--",
                 "--dry-run",
                 cwd=repository,
@@ -447,7 +462,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             message_author="user",
         )
 
@@ -489,7 +504,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             environment={
                 "AGENT_NAME": "An agent name that is deliberately very long",
                 "AGENT_EMAIL": "agent@example.com",
@@ -563,7 +578,7 @@ class CommitTests(unittest.TestCase):
             "--designer",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
         )
 
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -580,7 +595,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             environment={
                 "AMP_URL": "https://ampcode.com/",
                 "AMP_THREAD_ID": "T-1234",
@@ -601,7 +616,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             environment={
                 "AMP_URL": None,
                 "AMP_THREAD_ID": None,
@@ -619,7 +634,7 @@ class CommitTests(unittest.TestCase):
             "--author",
             "agent",
             "--human-initiator",
-            "agent",
+            AGENT,
             environment={
                 "AMP_URL": "https://ampcode.com",
                 "AMP_THREAD_ID": "T-1234",

@@ -73,6 +73,12 @@ def parse_identity_argument(value: str) -> str | Identity:
     return parse_identity(value)
 
 
+def parse_human_initiator_argument(value: str) -> str | Identity:
+    if value == "user":
+        return value
+    return parse_identity(value)
+
+
 def identity_from_parts(
     name: str | None,
     email: str | None,
@@ -424,8 +430,8 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument(
         "--human-initiator",
         required=True,
-        type=parse_identity_argument,
-        help="Identity that initiated the change: agent, user, or Name <email>.",
+        type=parse_human_initiator_argument,
+        help="Identity that initiated the change: user or Name <email>.",
     )
     parser.add_argument(
         "--large-change-justification",
