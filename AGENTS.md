@@ -64,11 +64,9 @@ The helper accepts:
 - `--author agent|user|Name <email>`
 - repeatable `--co-author agent|user|Name <email>`
 - repeatable `--designer agent|user|Name <email>`
-- `--human-initiator user|Name <email>`
+- optional `--human-initiator user|Name <email>` (defaults to `user`)
 - `--large-change-justification`
 - additional Git options after `--`
-
-`--human-initiator` defaults to `user` when omitted.
 
 Use a custom `Name <email>` only when the attribution belongs to someone
 other than yourself or the user.
