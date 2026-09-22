@@ -60,13 +60,16 @@ The helper accepts:
 
 - `--subject` (also `--first-line`)
 - `--body`
-- `--message-author agent|user`
-- `--author agent|user`
-- repeatable `--co-author agent|user`
-- repeatable `--designer agent|user`
-- `--human-initiator agent|user`
+- `--message-author agent|user|Name <email>`
+- `--author agent|user|Name <email>`
+- repeatable `--co-author agent|user|Name <email>`
+- repeatable `--designer agent|user|Name <email>`
+- `--human-initiator agent|user|Name <email>`
 - `--large-change-justification`
 - additional Git options after `--`
+
+Use a custom `Name <email>` only when the attribution belongs to someone
+other than yourself or the user.
 
 The helper reads the agent's Git identity from the environment variables `AGENT_NAME` and `AGENT_EMAIL`. It reads the user's identity from global Git configuration (`user.name` and `user.email`). Do not set any of these values yourself. If the helper fails because some of them are not set, ask the user to set them.
 
