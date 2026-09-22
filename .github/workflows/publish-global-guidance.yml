@@ -49,7 +49,7 @@ jobs:
             git -C "$repository" config user.name 'github-actions[bot]'
             git -C "$repository" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git -C "$repository" commit -m 'Publish global-guidance skill'
-            git -C "$repository" push origin HEAD:main
+            AMP_API_KEY="$api_key" git -C "$repository" push origin HEAD:main
           }
 
           publish "$AMP_API_KEY_GMAIL" "$RUNNER_TEMP/user-skills-gmail"
