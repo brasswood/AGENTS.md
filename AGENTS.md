@@ -27,10 +27,10 @@ Exclude the following additions and deletions when applying the 40-line limit:
 
 The following changes may exceed the 40-line limit. Make each such change in its own commit, with no other changes:
 
-- Rename a symbol and update its uses accordingly.
-- Change a function's signature and update its call sites accordingly without changing any implementation.
-- Change a struct or enum's fields and/or variants and update its destructuring uses or match arms accordingly without changing any implementation.
-- Remove a trait's associated item and update its references accordingly without changing any implementation.
+- Rename a single symbol and update its uses accordingly.
+- Change a single function's signature and update its call sites accordingly without changing any implementation.
+- Change a single struct or enum's fields and/or variants and update its destructuring uses or match arms accordingly without changing any implementation.
+- Remove a single trait's associated item and update its references accordingly without changing any implementation.
 - Move a section of code without modifying it or changing its behavior, such as moving a function to another module.
 
 These are the only exceptions to the 40-line rule. If a proposed commit would exceed the limit and does not clearly qualify for an exception above, discuss it with the user before proceeding.
