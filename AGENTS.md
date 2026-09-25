@@ -29,8 +29,7 @@ The following changes may exceed the 40-line limit. Make each such change in its
 
 - Rename a symbol and update its uses accordingly.
 - Change a function's signature and update its call sites accordingly without changing any implementation.
-- Change a struct or enum's fields or variants and update its destructuring uses accordingly without changing any implementation.
-- Change an enum's variants and update match blocks accordingly, either removing defunct arms or implementing new arms as stubs.
+- Change a struct or enum's fields and/or variants and update its destructuring uses or match arms accordingly without changing any implementation.
 - Remove a trait's associated item and update its references accordingly without changing any implementation.
 - Move a section of code without modifying it or changing its behavior, such as moving a function to another module.
 
