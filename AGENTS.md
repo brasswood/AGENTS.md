@@ -7,7 +7,9 @@ Record all file edits in one or more commits. If the project is not a Git reposi
 
 Each commit must express one coherent change. A reviewer should be able to understand and verify that change independently of the other commits.
 
-Limit each commit to at most 40 added lines and at most 40 deleted lines, subject to the exceptions below. Split larger changes into smaller, coherent, independently reviewable commits. Meeting this limit takes priority over keeping intermediate revisions compiling and working.
+Limit each commit to at most 40 added lines and at most 40 deleted lines, subject to the exceptions in "Exceptions to Tracking and the 40-Line Limit" below. Split larger changes into smaller, coherent, independently reviewable commits.
+
+**Do not** exceed the limit to fit coordinated changes into one commit. Split the coordinated change into a series of changes that are each under the limit (subject to the exceptions). Intermediate revisions do not need to compile or function properly if this is what is necessary to keep them under the limit.
 
 For example, if making `A` call a new function `B` and implementing `B` would exceed the limit, first commit the changes to `A` with a stub for `B` (e.g., `todo!()`) if this commit does not exceed the limit. Implement `B` in later commits, keeping each commit within the limit.
 
