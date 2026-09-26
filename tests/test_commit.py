@@ -184,6 +184,46 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("0 additions and 41 deletions", result.stderr)
 
+    def test_requires_compatible_exception_and_justification(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+            invalid = (
+                (
+                    ("--large-change-justification", "Reason"),
+                    "--large-change-exception",
+                ),
+                (
+                    ("--large-change-exception", "artifact"),
+                    "--large-change-justification",
+                ),
+                (
+                    ("--large-change-exception", "move")
+                    + large_change_options("symbol-rename", "Reason"),
+                    "cannot be combined",
+                ),
+                (
+                    ("--large-change-exception", "artifact")
+                    + large_change_options("move", "Reason"),
+                    "cannot be combined",
+                ),
+            )
+            for arguments, expected in invalid:
+                result = run_test_commit(repository, *arguments)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn(expected, result.stderr)
+
+            result = run_test_commit(
+                repository,
+                *large_change_options(justification="Both count exclusions apply"),
+                "--large-change-exception",
+                "deferred-work-comment",
+            )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_amend_counts_the_complete_replacement(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
