@@ -224,6 +224,30 @@ class CommitTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_accepts_each_single_change_exception_variant(self) -> None:
+        variants = (
+            "symbol-rename",
+            "function-signature",
+            "struct-or-enum-fields-or-variants",
+            "trait-associated-item-removal",
+            "move",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
+            (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
+            subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
+
+            for variant in variants:
+                with self.subTest(variant=variant):
+                    result = run_test_commit(
+                        repository,
+                        *large_change_options(variant),
+                        "--",
+                        "--dry-run",
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_amend_counts_the_complete_replacement(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repository = Path(directory)
