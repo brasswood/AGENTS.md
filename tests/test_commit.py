@@ -87,6 +87,17 @@ def run_test_commit(
     )
 
 
+def large_change_options(
+    variant: str = "artifact", justification: str = "Test fixture"
+) -> tuple[str, ...]:
+    return (
+        "--large-change-exception",
+        variant,
+        "--large-change-justification",
+        justification,
+    )
+
+
 def create_commit(
     *arguments: str,
     environment: dict[str, str | None] | None = None,
@@ -163,9 +174,7 @@ class CommitTests(unittest.TestCase):
             path = repository / "lines.txt"
             path.write_text("line\n" * 41, encoding="utf-8")
             subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
-            base = run_test_commit(
-                repository, "--large-change-justification", "Test fixture"
-            )
+            base = run_test_commit(repository, *large_change_options())
             self.assertEqual(base.returncode, 0, base.stderr)
             path.unlink()
             subprocess.run(["git", "add", "--update"], cwd=repository, check=True)
@@ -181,15 +190,18 @@ class CommitTests(unittest.TestCase):
             subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
             (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
             subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
-            base = run_test_commit(
-                repository, "--large-change-justification", "Test fixture"
-            )
+            base = run_test_commit(repository, *large_change_options())
             self.assertEqual(base.returncode, 0, base.stderr)
 
-            result = run_test_commit(repository, "--", "--amend")
+            result = run_test_commit(
+                repository,
+                *large_change_options(),
+                "--",
+                "--amend",
+            )
 
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("41 additions and 0 deletions", result.stderr)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("warning: allowing 41 additions and 0 deletions", result.stderr)
 
     def test_merge_amend_uses_the_first_parent(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -206,9 +218,7 @@ class CommitTests(unittest.TestCase):
             )
             (repository / "lines.txt").write_text("line\n" * 41, encoding="utf-8")
             subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
-            side = run_test_commit(
-                repository, "--large-change-justification", "Test fixture"
-            )
+            side = run_test_commit(repository, *large_change_options())
             self.assertEqual(side.returncode, 0, side.stderr)
             subprocess.run(
                 ["git", "checkout", "-q", main_branch], cwd=repository, check=True
@@ -219,10 +229,15 @@ class CommitTests(unittest.TestCase):
                 cwd=repository, check=True,
             )
 
-            result = run_test_commit(repository, "--", "--amend")
+            result = run_test_commit(
+                repository,
+                *large_change_options(),
+                "--",
+                "--amend",
+            )
 
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("41 additions and 0 deletions", result.stderr)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("warning: allowing 41 additions and 0 deletions", result.stderr)
 
     def test_rejects_commit_content_selection(self) -> None:
         for arguments in (("--all",), ("-a",), ("--include",), ("--", "file")):
@@ -240,9 +255,7 @@ class CommitTests(unittest.TestCase):
             subprocess.run(["git", "add", "lines.txt"], cwd=repository, check=True)
 
             result = run_test_commit(
-                repository,
-                "--large-change-justification",
-                justification,
+                repository, *large_change_options("symbol-rename", justification)
             )
             message = subprocess.run(
                 ["git", "show", "-s", "--format=%B"],
@@ -267,7 +280,7 @@ class CommitTests(unittest.TestCase):
             repository = Path(directory)
             subprocess.run(["git", "init", "--quiet"], cwd=repository, check=True)
             result = run_test_commit(
-                repository, "--large-change-justification", "Not needed"
+                repository, *large_change_options(justification="Not needed")
             )
 
         self.assertEqual(result.returncode, 2)
