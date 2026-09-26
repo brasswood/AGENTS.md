@@ -20,6 +20,7 @@ CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
 AMP_THREAD_TRAILER = "Amp-Thread-ID: "
 LARGE_CHANGE_PREFIX = "Large commit justification: "
+LARGE_CHANGE_EXCEPTION_PREFIX = "Large commit exception(s): "
 LARGE_CHANGE_EXCEPTIONS = (
     "artifact",
     "deferred-work-comment",
@@ -235,6 +236,7 @@ def wrap_body(body: str) -> str:
 def format_message(
     subject: str,
     body: str | None,
+    large_change_exceptions: list[str],
     large_change_justification: str | None,
     message_author: Identity,
     author: Identity,
@@ -249,6 +251,9 @@ def format_message(
     parts = [subject]
     if body and body.strip():
         parts.extend(("", wrap_body(body)))
+    if large_change_exceptions:
+        exception_text = ", ".join(large_change_exceptions)
+        parts.extend(("", f"{LARGE_CHANGE_EXCEPTION_PREFIX}{exception_text}"))
     if large_change_justification is not None:
         justification = validate_single_line(
             large_change_justification,
@@ -494,6 +499,7 @@ def main() -> int:
         message = format_message(
             args.subject,
             args.body,
+            args.large_change_exception,
             args.large_change_justification,
             message_author,
             author,

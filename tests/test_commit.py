@@ -332,6 +332,7 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("warning: allowing 41 additions", result.stderr)
         self.assertIn(
+            "Large commit exception(s): symbol-rename\n\n"
             "Large commit justification: A deliberately long justification A\n"
             "deliberately long justification A deliberately long justification A\n"
             "deliberately long justification\n\n"
