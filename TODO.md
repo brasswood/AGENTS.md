@@ -1,5 +1,4 @@
 # TODO:
-- Add strict exceptions to `commit.py`
 - Inverted pyramid/Progressive elaboration: generally fix up the AI writing to do that.
     - https://chatgpt.com/share/6aa45d89-d684-83e8-99f3-825f2e38ac87
 - Clean up "selectors" terminology with a fresh thread

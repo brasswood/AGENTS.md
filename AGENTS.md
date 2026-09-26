@@ -69,7 +69,10 @@ The helper accepts:
 - repeatable `--co-author agent|user|Name <email>`
 - repeatable `--designer agent|user|Name <email>`
 - optional `--human-initiator user|Name <email>` (defaults to `user`)
-- `--large-change-justification`
+- repeatable `--large-change-exception` (`artifact`, `deferred-work-comment`,
+  `symbol-rename`, `function-signature`, `struct-or-enum-fields-or-variants`,
+  `trait-associated-item-removal`, or `move`)
+- `--large-change-justification` with a reason
 - additional Git options after `--`
 
 Use a custom `Name <email>` only when the attribution belongs to someone
@@ -80,9 +83,12 @@ The helper reads the agent's Git identity from the environment variables `AGENT_
 The helper rejects content-selection arguments such as `--all` and pathspecs
 so that it can check the staged index. It refuses a commit with more than 40
 additions or deletions. If that numerical check exceeds the limit but this
-guidance still permits the commit, pass `--large-change-justification` with a
-reason. The helper records that reason in the commit message. Do not
-use the override merely because a larger change has already been written.
+guidance still permits the commit, pass one or more exception variants and
+`--large-change-justification` with a reason. `artifact` and
+`deferred-work-comment` may be combined; each other variant must be used alone.
+These are attestations, not checks against the diff. The helper records the
+variant(s) and reason in the commit message. Do not use the override merely
+because a larger change has already been written.
 
 Arguments after `--` are forwarded to `git commit`. Do not forward content
 selection, author, or message-source options; the helper supplies or validates
