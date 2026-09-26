@@ -86,7 +86,7 @@ additions or deletions. If that numerical check exceeds the limit but this
 guidance still permits the commit, pass one or more exception variants and
 `--large-change-justification` with a reason. `artifact` and
 `deferred-work-comment` may be combined; each other variant must be used alone.
-These are attestations, not checks against the diff. The helper records the
+The helper records the
 variant(s) and reason in the commit message. Do not use the override merely
 because a larger change has already been written.
 
