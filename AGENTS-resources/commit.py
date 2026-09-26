@@ -20,6 +20,16 @@ CHANGE_LINE_LIMIT = 40
 AUTHOR_PREFIX = "Commit message authored by "
 AMP_THREAD_TRAILER = "Amp-Thread-ID: "
 LARGE_CHANGE_PREFIX = "Large commit justification: "
+LARGE_CHANGE_EXCEPTIONS = (
+    "artifact",
+    "deferred-work-comment",
+    "symbol-rename",
+    "function-signature",
+    "struct-or-enum-fields-or-variants",
+    "trait-associated-item-removal",
+    "move",
+)
+SINGLE_CHANGE_EXCEPTIONS = frozenset(LARGE_CHANGE_EXCEPTIONS[2:])
 AGENT_NAME_ENV = "AGENT_NAME"
 AGENT_EMAIL_ENV = "AGENT_EMAIL"
 IDENTITY_SELECTORS = ("agent", "user")
@@ -345,6 +355,7 @@ def run_commit(
     message: str,
     author: Identity,
     arguments: list[str],
+    large_change_exceptions: list[str],
     large_change_justification: str | None,
 ) -> int:
     validate_git_arguments(arguments)
@@ -358,14 +369,27 @@ def run_commit(
             amend = False
     additions, deletions = count_candidate_changes(amend)
     is_large = additions > CHANGE_LINE_LIMIT or deletions > CHANGE_LINE_LIMIT
-    if not is_large and large_change_justification is not None:
-        raise ValueError("large-change justification is unnecessary")
-    if is_large and large_change_justification is None:
+    if len(set(large_change_exceptions)) != len(large_change_exceptions):
+        raise ValueError("large-change exceptions must not contain duplicates")
+    single_change_exception = SINGLE_CHANGE_EXCEPTIONS.intersection(
+        large_change_exceptions
+    )
+    if single_change_exception and len(large_change_exceptions) != 1:
+        raise ValueError(
+            "single-change exceptions cannot be combined with other exceptions"
+        )
+    if is_large and (
+        not large_change_exceptions or large_change_justification is None
+    ):
         raise ValueError(
             f"proposed commit has {additions} additions and {deletions} deletions; "
             f"the limit is {CHANGE_LINE_LIMIT} in either direction; split it or "
-            "pass --large-change-justification"
+            "pass --large-change-exception and --large-change-justification"
         )
+    if not is_large and (
+        large_change_exceptions or large_change_justification is not None
+    ):
+        raise ValueError("large-change justification is unnecessary")
     if large_change_justification is not None:
         justification = validate_single_line(
             large_change_justification,
@@ -434,6 +458,13 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
         help="Identity that initiated the change: user or Name <email> (default: user).",
     )
     parser.add_argument(
+        "--large-change-exception",
+        action="append",
+        choices=LARGE_CHANGE_EXCEPTIONS,
+        default=[],
+        help="Attest to an allowed exception; repeat for artifact and deferred-work-comment.",
+    )
+    parser.add_argument(
         "--large-change-justification",
         help="Reason that the documented exception to the line limit applies.",
     )
@@ -471,7 +502,11 @@ def main() -> int:
             human_initiator,
         )
         return run_commit(
-            message, author, git_arguments, args.large_change_justification
+            message,
+            author,
+            git_arguments,
+            args.large_change_exception,
+            args.large_change_justification,
         )
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
