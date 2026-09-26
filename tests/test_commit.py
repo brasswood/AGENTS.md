@@ -209,6 +209,11 @@ class CommitTests(unittest.TestCase):
                     + large_change_options("move", "Reason"),
                     "cannot be combined",
                 ),
+                (
+                    ("--large-change-exception", "artifact")
+                    + large_change_options("artifact", "Reason"),
+                    "must not contain duplicates",
+                ),
             )
             for arguments, expected in invalid:
                 result = run_test_commit(repository, *arguments)
